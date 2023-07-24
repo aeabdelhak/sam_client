@@ -33,6 +33,7 @@ export default function Login() {
         else toast.error("wrong username or password")
     }
     useEffect(() => {
+        ipcRenderer.send("init");
         router.events.on("routeChangeStart", e => setrooting(true))
         router.events.on("routeChangeComplete", e => setrooting(false))
 

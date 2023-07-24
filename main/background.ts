@@ -2,7 +2,8 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
 import find from 'local-devices'
-
+import arp from 'local-devices'
+import {exec} from "child_process"
 const isProd: boolean = process.env.NODE_ENV === 'production';
 
 if (isProd) {
@@ -51,6 +52,11 @@ ipcMain.on("logoutSuccess", async () => {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
   }
+
+}
+)
+ipcMain.on("init", async () => {
+
   mainWindow.webContents.clearHistory();
   mainWindow.setMinimumSize(400, 450)
   mainWindow.setSize(400, 450, true)
@@ -84,10 +90,34 @@ app.on('window-all-closed', () => {
 });
 
 async function getConnectedIPAddresses() {
+  return await getConnectedDevices();
+}
 
-  return (await find()).map(e=>e.ip);
+async function resize({width,height}:{width,height}){
 
 }
 
+function getConnectedDevices() {
+  return new Promise((resolve,reject) => {
+   exec('arp -a', (err, stdout) => {
+    if (err) {
+      reject('Error executing ARP command:'+ err);
+      return;
+    }
+
+    const lines = stdout.split('\n');
+    const connectedDevices = [];
+
+    lines.forEach((line) => {
+      const match = line.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}/);
+      if (match) {
+        connectedDevices.push(match[0]);
+      }
+    });
+     resolve(connectedDevices)
+    
+  });
+ }) 
+}
 
 

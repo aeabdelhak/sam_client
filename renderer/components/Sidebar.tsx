@@ -7,7 +7,7 @@ import { ipcRenderer } from "electron"
 
 export default function Sidebar() {
     async function logout() {
-        localStorage.clear()
+        localStorage.removeItem("authToken")
         ipcRenderer.send("logoutSuccess")
     }
     return (

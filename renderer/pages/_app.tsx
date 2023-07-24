@@ -20,8 +20,25 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const rooter = useRouter()
   async function lockUp() {
+    const old = localStorage.getItem("remoteIp")
+    if (old) {
+      try {
+        setLoading(true)
+
+        const url = "http://" + old + ":4000/connect"
+        const data = await (await fetch(url)).json();
+        if (data == true) {
+          config.remoteAddress = `http://${old}:4000`
+          localStorage.setItem("remoteIp", old)
+          setremote(`http://${old}:4000`)
+        }
+        setLoading(false)
+        return
+      } catch (error) {
+
+      }
+    }
     const ips = await ipcRenderer.sendSync("remoteLockUp") as string[]
-    toast(ips.toString())
     if (!ips || ips.length == 0)
       return setnotConnectedToAwifi(true)
     setnotConnectedToAwifi(false)
@@ -30,15 +47,15 @@ function MyApp({ Component, pageProps }: AppProps) {
         const url = "http://" + ip + ":4000/connect"
         const data = await (await fetch(url)).json()
         if (data == true) {
-
           config.remoteAddress = `http://${ip}:4000`
+          localStorage.setItem("remoteIp", ip)
           setremote(`http://${ip}:4000`)
+          setLoading(false)
         }
       } catch (error) {
       }
-      setLoading(false)
-
     }))
+    setLoading(false)
   }
 
   useEffect(() => {
