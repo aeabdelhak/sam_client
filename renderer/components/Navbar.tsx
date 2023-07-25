@@ -10,8 +10,8 @@ export default function Navbar() {
     const { title, user } = useAppContext()
 
     return (
-        <div className=" appDrag sticky top-0 bg-white z-20 ">
-            <div className="flex  mx-auto p-4 items-center container">
+        <div className="  sticky top-0 bg-white z-20 ">
+            <div className="flex ml-24  mx-auto p-4 items-center container">
                 <div className="flex-1 flex items-center">
                     <NavArrows />
                     <div className="">

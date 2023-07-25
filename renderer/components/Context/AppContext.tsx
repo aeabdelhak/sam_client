@@ -60,6 +60,8 @@ type classState = {
     error: boolean,
     data: Class[],
     getData: () => Promise<void>,
+    updateClass: (p: { classId: string, label: string }) => Promise<boolean>
+    deleteClass: (p: { classId: string }) => Promise<boolean>
     newClass: (props: { label: string }) => Promise<boolean>,
 }
 type gardienState = {
@@ -455,6 +457,50 @@ export default function AppContext({ children }: { children: ReactNode }) {
             return map;
         })
     }
+    async function updateClass({ classId, label }: { classId: string, label: string }) {
+        try {
+            const res = await fetchApi("/update/class", {
+                method: "POST",
+                body: JSON.stringify({ classId, label }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+
+            })
+            if (res.success) {
+                await getClasses();
+                     getGardiens();
+                toast.success(" class label updated successfuly")
+                return true;
+            }
+            if (res.exist) toast.error("another class with same label exists")
+            return false;
+
+        } catch (error) {
+            toast.error("somethong went wrong ,try again")
+
+            return false;
+        }
+    }
+    async function deleteClass({ classId }: { classId: string }) {
+
+        try {
+            const res = await fetchApi("/delete/class/" + classId, {
+                method: "DELETE",
+            })
+            if (res.success) {
+                 getGardiens();
+                await getClasses();
+                toast.success(" class deleted successfuly")
+                return true;
+            }
+            return false;
+
+        } catch (error) {
+            toast.error("somethong went wrong ,try again")
+            return false;
+        }
+    }
 
     return (
         <Context.Provider value={{
@@ -471,7 +517,9 @@ export default function AppContext({ children }: { children: ReactNode }) {
             classes: {
                 ...classes,
                 getData: getClasses,
-                newClass
+                newClass,
+                updateClass,
+                deleteClass
             },
             students: {
                 newStudent,

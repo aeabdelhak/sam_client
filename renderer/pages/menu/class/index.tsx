@@ -7,6 +7,7 @@ import Modal from "../../../components/Ui/Modal";
 import NewClass from "../../../components/class/newClassModal";
 import Title from "../../../components/Title";
 import { useAppContext } from "../../../components/Context/AppContext";
+import TheClass from "../../../components/class/Class";
 let data = null as any[]
 export default function Classes() {
     const [showNew, setshowNew] = useState(false)
@@ -52,23 +53,13 @@ export default function Classes() {
                     </div>
                 </div>
                 {data?.map(e => (
-                    <button
-
+                    <TheClass
+                        {...e}
                         key={e.id}
-                        className="flex w-full group transition-all disabled:bg-blue-700  items-center disabled:text-white space-x-2 p-4 bg-white rounded-md border">
-                        <div className="bg-blue-800 flex  text-white rounded-full w-8 h-8  justify-center items-center">
-                        </div>
-                        <div className="flex flex-1 items-start space-y-1 flex-col">
-                            <p className="text-sm ">
-                                {e.label}
-                            </p>
-                        </div>
-                        <div className="text-xs">
-                            {e.students?.length} students
-                        </div>
-                    </button>
+                    />
                 ))}
             </div>
         </div>
     )
 }
+

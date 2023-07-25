@@ -42,8 +42,8 @@ export default function Login() {
             router.events.off("routeChangeComplete", e => setrooting(false))
         }
     }, [])
-    if (rooting) return <div className="flex h-screen w-screen scale-150 justify-center items-center">
-        <LoaderIcon />
+    if (rooting) return <div className="flex h-screen w-screen justify-center items-center">
+        <LoaderIcon className="scale-150" />
     </div>
     return (
         <form onSubmit={ev => start(() => authenticate(ev))} className="flex flex-col justify-center space-y-2 p-4 items-center">
@@ -53,7 +53,7 @@ export default function Login() {
                     SAM
                 </div>
                 <div className=" ">
-                    Students access managment
+                    Students Attendance manager
                 </div>
             </div>
             <h1 className="font-bold uppercase">

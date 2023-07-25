@@ -36,11 +36,10 @@ export default function Gardiens({ data }: { data: gardien[] }) {
                             Gardiens
                         </h1>
                         <div className="">
-                            <button
-                                onClick={() => setopenGardien(true)}
-                                className="bg-blue-700 tracking-wide text-sm text-white px-4 py-2 rounded-lg">
+                            <Button
+                                onClick={() => setopenGardien(true)}>
                                 Create a gardien
-                            </button>
+                            </Button>
                         </div>
                     </div>
                     <div className="space-y-1">
@@ -116,7 +115,7 @@ function Gardien({ index, gardien, setselectedStudent, selectedStudent }: { sets
 
                     <Button
                         onClick={() => setopenStudent(true)}
-                        className="font-light !text-blue-700 border-blue-700 border-2 bg-transparent"
+                        className="font-light !text-blue-700 active:!bg-blue-200 hover:bg-blue-100 bg-transparent"
                     >
                         add a student
                     </Button>

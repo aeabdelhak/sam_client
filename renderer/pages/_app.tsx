@@ -31,6 +31,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           config.remoteAddress = `http://${old}:4000`
           localStorage.setItem("remoteIp", old)
           setremote(`http://${old}:4000`)
+    setnotConnectedToAwifi(false)
+
         }
         setLoading(false)
         return
@@ -80,8 +82,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       try again
     </Button>
   </div>
-  if (loading) return <div className="flex h-screen w-screen scale-150 justify-center items-center">
-    <LoaderIcon />
+  if (loading) return <div className="flex h-screen w-screen  justify-center items-center">
+    <LoaderIcon className='scale-150' />
   </div>
   if (!remote) {
     return <div className="flex gap-4 h-screen flex-col  w-screen  justify-center items-center">
@@ -100,13 +102,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     <AppContext>
       <Toast />
       {rooter.pathname == "/home" ?
-        <Component {...pageProps} /> : <Layout>
+        <Component {...pageProps} /> :<>
           <Navbar />
+        <Layout>
           <div className="p-4 container mx-auto">
             <Component {...pageProps} />
 
           </div>
         </Layout>
+        </> 
       }
     </AppContext>
   </Fragment>

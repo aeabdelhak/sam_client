@@ -40,7 +40,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
             className="sticky space-y-4  flex flex-col rounded-lg top-28">
             <div className=" z-0 p-1 bg-gradient-to-br bg-white flex items-center rounded-lg gap-4">
                 <div className="   flex aspect-square w-28 h-w-28  overflow-hidden shrink-0  text-white rounded   justify-center items-center">
-                    <img className="object-cover h-full w-full" src={config.remoteAddress.concat("/", student.image.path)} alt="" />
+                    <img className="object-cover h-full w-full" src={config.remoteAddress.concat("/", student.image.url)} alt="" />
                 </div>
                 <div className="flex flex-1 items-start text-blue-900 space-y-1 flex-col">
                     <p className="font-bold text-lg ">

@@ -3,13 +3,21 @@ import fetchApi from "../utils/fetch"
 import { LoaderIcon } from "react-hot-toast"
 import { useAppContext } from "./Context/AppContext"
 import Sidebar from "./Sidebar"
+import { useRouter } from "next/router"
+import { AnimatePresence, motion } from "framer-motion"
+import { ipcRenderer } from "electron"
 
 export default function Layout({ children }: { children: ReactNode }) {
     const { setUser, classes: {
         getData,
     } } = useAppContext()
+    const router = useRouter();
+    const [zoom, setzoom] = useState(true)
     const [loading, setloading] = useState(true)
     useEffect(() => {
+        ipcRenderer.on("zoom", (event, data) => {
+            setzoom(data);
+        })
         getData();
         (
             async () => {
@@ -29,18 +37,39 @@ export default function Layout({ children }: { children: ReactNode }) {
             setUser(undefined)
         }
     }, [])
-    if (loading) return <div className="w-screen h-screen flex">
+    if (loading) return <div className="w-screen h-full flex">
         <div className="m-auto scale-150">
             <LoaderIcon />
         </div>
     </div>
 
     return (
-        <div className=" flex   h-screen ">
-         <Sidebar/>
-            <div className="  ml-10 flex-1 flex flex-col ">
-                {children}
-            </div>
+        <div className=" flex   h-full ">
+            <Sidebar />
+            <AnimatePresence
+            mode="popLayout"
+            >
+                <motion.div
+                    key={router.pathname}
+                    transition={{
+                        duration:0.3
+                    }}
+                    animate={{
+                        scale: 1,
+                        opacity: 1,
+                    }}
+                    initial={{
+                        scale: !zoom ? 1.1:0.9,
+                        opacity: 0,
+                    }}
+                    exit={{
+                        scale:!zoom? 0.9:1.1,
+                        opacity: 0,
+                    }}
+                    className="  ml-24 flex-1 flex flex-col ">
+                    {children}
+                </motion.div>
+            </AnimatePresence>
         </div>
 
     )

@@ -1,9 +1,8 @@
 import { BrowserWindow, app, ipcMain } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-import find from 'local-devices'
-import arp from 'local-devices'
-import {exec} from "child_process"
+
+import { exec } from "child_process"
 const isProd: boolean = process.env.NODE_ENV === 'production';
 
 if (isProd) {
@@ -18,10 +17,10 @@ let mainWindow: BrowserWindow
   mainWindow = createWindow('main', {
     width: 400,
     height: 450,
-    frame: false,
+    frame: true,
     resizable: false,
     autoHideMenuBar: true,
-    titleBarStyle: "customButtonsOnHover",
+    titleBarStyle: "default",
     webPreferences: {
       scrollBounce: true,
     }
@@ -65,10 +64,15 @@ ipcMain.on("init", async () => {
 }
 )
 ipcMain.on("goForward", () => {
+  mainWindow.webContents.send("zoom", true)
   mainWindow.webContents.goForward();
 }
 )
+ipcMain.on("zoom", (event, data) => {
+  mainWindow.webContents.send("zoom", data)
+})
 ipcMain.on("goBack", () => {
+  mainWindow.webContents.send("zoom", false)
   mainWindow.webContents.goBack();
 }
 )
@@ -93,31 +97,31 @@ async function getConnectedIPAddresses() {
   return await getConnectedDevices();
 }
 
-async function resize({width,height}:{width,height}){
+async function resize({ width, height }: { width, height }) {
 
 }
 
 function getConnectedDevices() {
-  return new Promise((resolve,reject) => {
-   exec('arp -a', (err, stdout) => {
-    if (err) {
-      reject('Error executing ARP command:'+ err);
-      return;
-    }
-
-    const lines = stdout.split('\n');
-    const connectedDevices = [];
-
-    lines.forEach((line) => {
-      const match = line.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}/);
-      if (match) {
-        connectedDevices.push(match[0]);
+  return new Promise((resolve, reject) => {
+    exec('arp -a', (err, stdout) => {
+      if (err) {
+        reject('Error executing ARP command:' + err);
+        return;
       }
+
+      const lines = stdout.split('\n');
+      const connectedDevices = [];
+
+      lines.forEach((line) => {
+        const match = line.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}/);
+        if (match) {
+          connectedDevices.push(match[0]);
+        }
+      });
+      resolve(connectedDevices)
+
     });
-     resolve(connectedDevices)
-    
-  });
- }) 
+  })
 }
 
 

@@ -90,7 +90,7 @@ export default function NewStudent({ gardienId }: { gardienId: string }) {
                 <Button
                     onClick={close}
                     disabled={pending}
-                    className="text-gray-700 tracking-wide text-sm bg-gray-100 px-4 py-2 rounded-lg">
+                    className="!text-gray-700 tracking-wide text-sm active:bg-gray-200 bg-gray-100 px-4 py-2 rounded-lg">
                     close
                 </Button>
                 <Button

@@ -62,7 +62,10 @@ function Item({ icon, link, activeOn, profiles }: { profiles?: Roles[], activeOn
     if (!profiles || (profiles.includes(user.role)))
         return (
             <button
-                onClick={() => router.push(link)}
+                onClick={() => {
+                    ipcRenderer.send("zoom",true)
+                    router.push(link)
+                }}
                 disabled={activeOn == "equal" ? router.pathname == link : router.pathname.startsWith(link)} className="hover:bg-white/10 disabled:bg-blue-700 rounded-lg p-2 ">
                 {icon}
             </button>
