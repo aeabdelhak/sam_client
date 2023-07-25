@@ -11,6 +11,7 @@ import Button from '../components/Ui/button/Button';
 import AppContext from '../components/Context/AppContext';
 import dynamic from 'next/dynamic';
 import Toast from '../components/Ui/Toast';
+import OnlineChecker from '../components/Context/OnlineChecker';
 
 const Navbar = dynamic(import('../components/Navbar'), { ssr: false })
 function MyApp({ Component, pageProps }: AppProps) {
@@ -99,20 +100,22 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 
   return <Fragment>
-    <AppContext>
-      <Toast />
-      {rooter.pathname == "/home" ?
-        <Component {...pageProps} /> : <div className='flex flex-col min-h-screen'>
-          <Navbar />
-          <Layout>
-            <div className="p-4 flex-1 container mx-auto">
-              <Component {...pageProps} />
+    <OnlineChecker>
+      <AppContext>
+        <Toast />
+        {rooter.pathname == "/home" ?
+          <Component {...pageProps} /> : <div className='flex flex-col min-h-screen'>
+            <Navbar />
+            <Layout>
+              <div className="p-4 flex-1 container mx-auto">
+                <Component {...pageProps} />
 
-            </div>
-          </Layout>
-        </div>
-      }
-    </AppContext>
+              </div>
+            </Layout>
+          </div>
+        }
+      </AppContext>
+    </OnlineChecker>
   </Fragment>
 }
 

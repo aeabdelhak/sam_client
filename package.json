@@ -11,6 +11,19 @@
     "build": "nextron build",
     "postinstall": "electron-builder install-app-deps"
   },
+  "build":{
+    "appId": "com.sam.clien",
+    "productName": "SAM client",
+    "linux": {
+      "target": "AppImage"
+    },
+    "win": {
+      "target": "NSIS"
+    },
+    "mac": {
+    "target": "dmg"
+    }
+  },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
     "electron-serve": "^1.1.0",

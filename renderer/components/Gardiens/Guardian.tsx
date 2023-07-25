@@ -17,7 +17,7 @@ export default function Guardians({ data }: { data: guardian[] }) {
     const [selectedStudent, setselectedStudent] = useState<string>()
     const student = data?.flatMap(e => e?.students).find(e => e.id == selectedStudent);
     const [openguardian, setopenguardian] = useState(false)
-    const filtered = data.filter(e => e.name.includes(query) || e.phoneNumber.includes(query) || e.students.filter(e => e.firstName.includes(query) || e.lastName.includes(query)).length>0).map(e => ({...e,students:e.students.filter(e => e.firstName.includes(query) || e.lastName.includes(query))}));
+    const filtered = data?.filter(e => e.name.includes(query) || e.phoneNumber.includes(query) || e.students.filter(e => e.firstName.includes(query) || e.lastName.includes(query)).length>0).map(e => ({...e,students:e.students.filter(e => e.firstName.includes(query) || e.lastName.includes(query))}));
     
     return (
         <div className="">
