@@ -3,12 +3,13 @@ import { useAppContext } from "../Context/AppContext";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
+import ModalCloser from "../Ui/ModalCloser";
 
-export default function NewGardien() {
+export default function NewGuardian() {
     const { close } = useModal()
     const [pending, start] = useTransition()
-    const { gardiens: {
-        newGardent
+    const { guardians: {
+        newGuardian: newGardent
     } } = useAppContext()
 
     const save: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -20,7 +21,7 @@ export default function NewGardien() {
         const res = await newGardent({
             cardId,
             name,
-            phoneNumber:phone
+            phoneNumber: phone
         })
         if (res) close();
     }
@@ -32,12 +33,15 @@ export default function NewGardien() {
 
         }} className="p-6 space-y-3">
             <div className="space-y-2">
+                <div className="flex justify-between">
 
-                <h1 className="font-semibold text-2xl">
-                    Create a gardien
-                </h1>
+                    <h1 className="font-semibold text-2xl">
+                        Create a guardian
+                    </h1>
+                    <ModalCloser />
+                </div>
                 <p className="text-sm text-gray-500">
-                    fill the form bellow to create a new gardiens
+                    fill the form bellow to create a new guardians
                 </p>
             </div>
             <div className="flex flex-col gap-2">
@@ -47,10 +51,10 @@ export default function NewGardien() {
                     </p>
                     <Input
                         name="name"
-                        
-                    disabled={pending}
-                        
-                        placeholder="gardien Name"
+                        required
+                        disabled={pending}
+
+                        placeholder="guardian Name"
                     />
                 </label>
                 <label>
@@ -59,9 +63,9 @@ export default function NewGardien() {
                     </p>
                     <Input
                         name="cardId"
-                    disabled={pending}
-                        
-                        placeholder="gardien card id"
+                        disabled={pending}
+                        required
+                        placeholder="guardian card id"
                     />
                 </label>
                 <label>
@@ -70,20 +74,15 @@ export default function NewGardien() {
                     </p>
                     <Input
                         name="phone"
-                        
-                    disabled={pending}
-                        
-                        placeholder="gardien phone number"
+                        required
+                        disabled={pending}
+
+                        placeholder="guardian phone number"
                     />
                 </label>
             </div>
             <div className="flex justify-end gap-2">
-                <Button
-                    onClick={close}
-                    disabled={pending}
-                    className="text-gray-700 tracking-wide text-sm bg-gray-100 px-4 py-2 rounded-lg">
-                    close
-                </Button>
+          
                 <Button
                     disabled={pending}
                     type="submit"

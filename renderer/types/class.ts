@@ -7,14 +7,14 @@ export interface Class {
     id: string;
     firstName: string;
     lastName: string;
-    gardienId: string;
+    guardianId: string;
     classId: string;
     fileId: string;
-    Gardien: Gardien;
+    guardian: guardian;
     Attendece?: (AttendeceEntity | null)[] | null;
     image: Image;
   }
-  export interface Gardien {
+  export interface guardian {
     id: string;
     cardId: string;
     phoneNumber: string;

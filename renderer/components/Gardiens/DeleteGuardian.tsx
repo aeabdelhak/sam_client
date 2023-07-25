@@ -1,17 +1,16 @@
-import { CloseSquare } from "react-iconly";
-import { User, useAppContext } from "../Context/AppContext";
+import { User, guardian, useAppContext } from "../Context/AppContext";
 import { useModal } from "../Ui/Modal";
 import Button from "../Ui/button/Button";
 import { useState } from "react";
 import { LoaderIcon } from "react-hot-toast";
 import ModalCloser from "../Ui/ModalCloser";
 
-export default function DeleteUser(user: User) {
+export default function DeleteGuardian(user: guardian) {
     const [loading, setloading] = useState(false)
     const { close } = useModal()
     const {
-        users: {
-            deleteUser
+        guardians: {
+            deleteGuardian
         }
     } = useAppContext()
     return (
@@ -25,8 +24,11 @@ export default function DeleteUser(user: User) {
             </h1>
             <ModalCloser/>
             </div>
+            <p className="text-xs text-red-600">
+                all students under this guardian will be deleted
+            </p>
             <p className="text-sm">
-                are you sure you want to delete this user ?
+                are you sure you want to delete this gariden ?
             </p>
 
             <div className="flex justify-end">
@@ -35,7 +37,7 @@ export default function DeleteUser(user: User) {
                     className="bg-red-700 "
                     onClick={async e => {
                         setloading(true)
-                        await deleteUser({ id: user.id })
+                        await deleteGuardian({ id: user.id })
                         setloading(false)
                     }}>
                     {

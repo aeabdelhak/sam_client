@@ -24,25 +24,25 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (old) {
       try {
         setLoading(true)
-
         const url = "http://" + old + ":4000/connect"
         const data = await (await fetch(url)).json();
+        setLoading(false)
+
         if (data == true) {
           config.remoteAddress = `http://${old}:4000`
           localStorage.setItem("remoteIp", old)
           setremote(`http://${old}:4000`)
-    setnotConnectedToAwifi(false)
-
+          setnotConnectedToAwifi(false)
+          return
         }
-        setLoading(false)
-        return
       } catch (error) {
 
       }
     }
     const ips = await ipcRenderer.sendSync("remoteLockUp") as string[]
+
     if (!ips || ips.length == 0)
-      return setnotConnectedToAwifi(true)
+      return (setnotConnectedToAwifi(true), setLoading(false))
     setnotConnectedToAwifi(false)
     await Promise.all(ips.map(async ip => {
       try {
@@ -102,15 +102,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     <AppContext>
       <Toast />
       {rooter.pathname == "/home" ?
-        <Component {...pageProps} /> :<div className='flex flex-col min-h-screen'>
+        <Component {...pageProps} /> : <div className='flex flex-col min-h-screen'>
           <Navbar />
-        <Layout>
-          <div className="p-4 flex-1 container mx-auto">
-            <Component {...pageProps} />
+          <Layout>
+            <div className="p-4 flex-1 container mx-auto">
+              <Component {...pageProps} />
 
-          </div>
-        </Layout>
-        </div> 
+            </div>
+          </Layout>
+        </div>
       }
     </AppContext>
   </Fragment>

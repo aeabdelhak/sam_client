@@ -1,9 +1,10 @@
 import { BrowserWindow, app, ipcMain } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-
+import find from 'local-devices'
 import { exec } from "child_process"
 const isProd: boolean = process.env.NODE_ENV === 'production';
+const isMacOS = process.platform === 'darwin';
 
 if (isProd) {
   serve({ directory: 'app' });
@@ -42,7 +43,8 @@ ipcMain.on("loginSuccess", () => {
   mainWindow.setMinimumSize(1400, 700)
 })
 ipcMain.on("remoteLockUp", async (event) => {
-  event.returnValue = await getConnectedIPAddresses();
+  const connected = await getConnectedIPAddresses()
+  event.returnValue = connected;
 })
 ipcMain.on("logoutSuccess", async () => {
   if (isProd) {
@@ -94,7 +96,9 @@ app.on('window-all-closed', () => {
 });
 
 async function getConnectedIPAddresses() {
-  return await getConnectedDevices();
+  if (isMacOS)
+    return (await find()).map(e => e.ip);
+    return await getConnectedDevices();
 }
 
 async function resize({ width, height }: { width, height }) {

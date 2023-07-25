@@ -25,10 +25,10 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
         e.preventDefault()
         const formdata = new FormData(e.currentTarget)
         formdata.append("studentId", student.id)
-         await updateStudent(formdata);
+        await updateStudent(formdata);
     }
-    const deleteMe=()=> {
-        deleteStudent({studentId:student.id})
+    const deleteMe = () => {
+        deleteStudent({ studentId: student.id })
     }
 
     return (
@@ -160,7 +160,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                         <div className="flex justify-end">
                             <Button
                                 disabled={deleting}
-                                onClick={e=>startDeleting(()=>deleteMe())}
+                                onClick={e => startDeleting(() => deleteMe())}
                                 className="bg-red-700 ">
                                 delete
                             </Button>

@@ -26,7 +26,7 @@ export default async function fetchApi(...props: props) {
         }
         return await res.json()
     } catch (error) {
-        toast(error.message)
+        toast(error.status)
         return {}
     }
      

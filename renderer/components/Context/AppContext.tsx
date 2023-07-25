@@ -6,7 +6,7 @@ export enum Roles {
     ClassTeacher = "ClassTeacher",
     SuperUser = "SuperUser"
 }
-export interface gardien {
+export interface guardian {
     id: string;
     cardId: string;
     phoneNumber: string;
@@ -25,7 +25,7 @@ export interface StudentsEntity {
     id: string;
     firstName: string;
     lastName: string;
-    gardienId: string;
+    guardianId: string;
     classId: string;
     fileId?: null;
     class: Class;
@@ -64,13 +64,15 @@ type classState = {
     deleteClass: (p: { classId: string }) => Promise<boolean>
     newClass: (props: { label: string }) => Promise<boolean>,
 }
-type gardienState = {
+type guardianState = {
     refreshing: boolean,
     loading: boolean,
     error: boolean,
-    data: gardien[],
+    data: guardian[],
     getData: () => Promise<void>,
-    newGardent: (props: { name: string, cardId: string, phoneNumber: string }) => Promise<boolean>,
+    deleteGuardian: ({ id }: { id: string }) => Promise<boolean>,
+    updateGuardian: (props: { name: string, cardId: string, phoneNumber: string, guardianId: string }) => Promise<boolean>,
+    newGuardian: (props: { name: string, cardId: string, phoneNumber: string }) => Promise<boolean>,
 }
 type userState = {
     updateUserData: (params: { userId: string, username: string, name: string, role?: Roles }) => Promise<boolean>,
@@ -98,7 +100,7 @@ type state = {
     users: userState,
     setUser: Dispatch<SetStateAction<User>>,
     setTitle: Dispatch<SetStateAction<string>>,
-    gardiens: gardienState,
+    guardians: guardianState,
     classes: classState,
     students: studentState,
     attendance: attendance
@@ -109,7 +111,7 @@ const Context = createContext<state>({
     title: "",
     setTitle: null as never,
     setUser: null as never,
-    gardiens: null as never,
+    guardians: null as never,
     classes: null as never,
     students: null as never,
     users: null as never,
@@ -128,7 +130,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
     const [classes, setclasses] = useState<classState>()
     const [dismissReqs, setdismissReqs] = useState<DismissionRequests>(new Map())
     const [users, setusers] = useState<userState>()
-    const [gardien, setgardien] = useState<gardienState>()
+    const [guardian, setguardian] = useState<guardianState>()
     const [user, setUser] = useState<User>()
     const [title, setTitle] = useState("")
 
@@ -224,31 +226,31 @@ export default function AppContext({ children }: { children: ReactNode }) {
     }
 
 
-    async function getGardiens() {
-        const res = { ...gardien }
-        const init = { ...gardien }
+    async function getguardians() {
+        const res = { ...guardian }
+        const init = { ...guardian }
 
         try {
             res.data ? init.refreshing = true : init.loading = true;
-            setgardien(init);
-            res.data = await fetchApi("/get/gardiens")
+            setguardian(init);
+            res.data = await fetchApi("/get/guardians")
             res.error = false;
         } catch (error) {
             res.error = true;
         }
         res.refreshing = false
         res.loading = false;
-        setgardien(res);
+        setguardian(res);
 
     }
     async function newGardent(params: { name: string, cardId: string, phoneNumber: string }) {
         type response = {
             exist: boolean,
-            gardienId: string,
+            guardianId: string,
 
         }
         try {
-            const res: response = await fetchApi("/create/gardien", {
+            const res: response = await fetchApi("/create/guardian", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -256,12 +258,12 @@ export default function AppContext({ children }: { children: ReactNode }) {
 
                 body: JSON.stringify(params)
             })
-            if (res.gardienId) {
-                await getGardiens();
+            if (res.guardianId) {
+                await getguardians();
                 toast.success("new gariden created successfuly")
                 return true;
             }
-            if (res.exist) toast.error("a gardien with same cardId already exists")
+            if (res.exist) toast.error("a guardian with same cardId already exists")
             return false;
 
         } catch (error) {
@@ -279,7 +281,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 body: params
             })
             if (res.studentId) {
-                await getGardiens();
+                await getguardians();
                 toast.success("new student created successfuly")
                 return true;
             }
@@ -300,7 +302,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 body: params
             })
             if (res.success) {
-                await getGardiens();
+                await getguardians();
                 toast.success(" student data updated successfuly")
                 return true;
             }
@@ -320,7 +322,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 method: "DELETE",
             })
             if (res) {
-                await getGardiens();
+                await getguardians();
                 toast.success(" student deleted successfuly")
                 return true;
             }
@@ -342,6 +344,26 @@ export default function AppContext({ children }: { children: ReactNode }) {
             if (res) {
                 await getUsers();
                 toast.success(" user deleted successfuly")
+                return true;
+            }
+            toast.error("something went wrong")
+            return false;
+
+        } catch (error) {
+            toast.error("somethong went wrong ,try again")
+            return false;
+        }
+    }
+    async function deleteGuardian({ id }: { id: string }) {
+
+        try {
+            const res = await fetchApi("/delete/guardian/" + id, {
+                method: "DELETE",
+            })
+            await getguardians();
+            await getClasses();
+            if (res.success) {
+                toast.success(" guardian deleted successfuly")
                 return true;
             }
             toast.error("something went wrong")
@@ -469,7 +491,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res.success) {
                 await getClasses();
-                     getGardiens();
+                getguardians();
                 toast.success(" class label updated successfuly")
                 return true;
             }
@@ -489,7 +511,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 method: "DELETE",
             })
             if (res.success) {
-                 getGardiens();
+                getguardians();
                 await getClasses();
                 toast.success(" class deleted successfuly")
                 return true;
@@ -501,6 +523,38 @@ export default function AppContext({ children }: { children: ReactNode }) {
             return false;
         }
     }
+    async function updateGuardian(params: { name: string, cardId: string, phoneNumber: string, guardianId: string }) {
+        try {
+            const res = await fetchApi("/update/guardian", {
+                method: "POST",
+                body: JSON.stringify(params),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+
+            })
+            await getguardians();
+            await getClasses();
+
+            if (res.success) {
+                toast.success(" guardian data updated successfuly")
+                return true;
+            }
+            if (res.notFound) {
+
+                toast.success(" unable to find the desired guardian ")
+                return true;
+            }
+            if (res.exist) toast.error("another class with same label exists")
+            return false;
+
+        } catch (error) {
+            toast.error("somethong went wrong ,try again")
+
+            return false;
+        }
+
+    }
 
     return (
         <Context.Provider value={{
@@ -508,10 +562,12 @@ export default function AppContext({ children }: { children: ReactNode }) {
             setTitle,
             user,
             setUser,
-            gardiens: {
-                ...gardien,
-                getData: getGardiens,
-                newGardent,
+            guardians: {
+                ...guardian,
+                getData: getguardians,
+                newGuardian: newGardent,
+                updateGuardian,
+                deleteGuardian
 
             },
             classes: {

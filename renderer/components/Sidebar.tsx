@@ -31,7 +31,7 @@ export default function Sidebar() {
                     <Item
                         profiles={[Roles.Administrator, Roles.SuperUser]}
                         activeOn="equal"
-                        link="/menu/gardiens"
+                        link="/menu/guardians"
                         icon={<People size={"small"} />}
                     />
                     <Item

@@ -4,7 +4,7 @@ import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
 
-export default function NewStudent({ gardienId }: { gardienId: string }) {
+export default function NewStudent({ guardianId }: { guardianId: string }) {
     const { close } = useModal()
     const [pending, start] = useTransition()
     const { students: {
@@ -16,7 +16,7 @@ export default function NewStudent({ gardienId }: { gardienId: string }) {
     const save: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault()
         const formdata = new FormData(e.currentTarget)
-        formdata.append("gardienId",gardienId)
+        formdata.append("guardianId",guardianId)
         const res = await newStudent(formdata);
         if (res) close()
     }
