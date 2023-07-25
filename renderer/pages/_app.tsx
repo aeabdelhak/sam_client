@@ -102,15 +102,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     <AppContext>
       <Toast />
       {rooter.pathname == "/home" ?
-        <Component {...pageProps} /> :<>
+        <Component {...pageProps} /> :<div className='flex flex-col min-h-screen'>
           <Navbar />
         <Layout>
-          <div className="p-4 container mx-auto">
+          <div className="p-4 flex-1 container mx-auto">
             <Component {...pageProps} />
 
           </div>
         </Layout>
-        </> 
+        </div> 
       }
     </AppContext>
   </Fragment>

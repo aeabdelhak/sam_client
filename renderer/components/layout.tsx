@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     </div>
 
     return (
-        <div className=" flex   h-full ">
+        <div className=" flex  flex-1  h-full ">
             <Sidebar />
             <AnimatePresence
             mode="popLayout"
@@ -66,7 +66,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                         scale:!zoom? 0.9:1.1,
                         opacity: 0,
                     }}
-                    className="  ml-24 flex-1 flex flex-col ">
+                    className="  h-full ml-24 flex-1 flex flex-col ">
                     {children}
                 </motion.div>
             </AnimatePresence>
