@@ -22,3 +22,10 @@
 *{
   font-family: nunito,sans-serif;
 }
+
+html{
+  @apply select-none
+}
+.d{
+  @apply blur blur-none;
+}

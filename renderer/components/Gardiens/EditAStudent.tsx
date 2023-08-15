@@ -40,7 +40,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
             className="sticky space-y-4  flex flex-col rounded-lg top-28">
             <div className=" z-0 p-1 bg-gradient-to-br bg-white flex items-center rounded-lg gap-4">
                 <div className="   flex aspect-square w-28 h-w-28  overflow-hidden shrink-0  text-white rounded   justify-center items-center">
-                    <img className="object-cover h-full w-full" src={config.remoteAddress.concat("/", student.image.url)} alt="" />
+                    <img className="object-cover h-full w-full" src={config.remoteAddress.concat("/", student.Image.url)} alt="" />
                 </div>
                 <div className="flex flex-1 items-start text-blue-900 space-y-1 flex-col">
                     <p className="font-bold text-lg ">
@@ -48,7 +48,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                     </p>
                     <p
                         className=" font-extralight  text-blue-900/80 ">
-                        {student.class.label}
+                        {student.Class.label}
                     </p>
                 </div>
             </div>
@@ -126,7 +126,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                             <select
                                 disabled={pending}
 
-                                defaultValue={student.class.id}
+                                defaultValue={student.Class.id}
                                 className="appearance-none flex-1 focus:text-gray-900 text-gray-500 outline-none w-full bg-transparent px-2 py-2 text-sm "
                                 name="classId" id="">
                                 {data.map(e => (

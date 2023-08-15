@@ -3,7 +3,7 @@
 
 
 import { InfoCircle } from "react-iconly";
-import { FormEventHandler, useTransition,  } from "react";
+import { FormEventHandler, useState, useTransition,  } from "react";
 import Router from "next/router";
 import { LoaderIcon, toast } from "react-hot-toast";
 import fetchApi from "../../utils/fetch";
@@ -11,11 +11,12 @@ import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 
 export default function NewClass({refresh}:{refresh:any}) {
-   const [loading,startTransition]=useTransition()
+   const [loading,setLoading]=useState(false)
     const newClass: FormEventHandler<HTMLFormElement> = async (ev) => {
         ev.preventDefault();
         const formdata = new FormData(ev.currentTarget)
         const label = formdata.get("label") as string;
+        setLoading(true)
         const res = await fetchApi("/create/class", {
             method: "POST",
             body: JSON.stringify({ label }),
@@ -33,10 +34,12 @@ export default function NewClass({refresh}:{refresh:any}) {
             toast.error("another class with same name exists ")
         }
         else toast.error("somthing went wrong")
+        setLoading(false)
+
     }
     return (
         <form
-            onSubmit={ev=>startTransition(()=>newClass(ev))}
+            onSubmit={newClass}
             className="flex flex-col justify-center space-y-2 p-4 items-center">
             <div className="py-10  font-mono flex justify-center items-center flex-col space-y-2">
 
@@ -50,6 +53,7 @@ export default function NewClass({refresh}:{refresh:any}) {
 
             <div className="text-gray-400 flex flex-col  space-y-2 w-full p-4">
                 <Input
+                    required
                     disabled={loading}
                     name="label"
                     placeholder="label"

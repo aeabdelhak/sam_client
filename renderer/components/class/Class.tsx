@@ -1,9 +1,11 @@
-import { Delete, Edit } from "react-iconly";
+import { Delete, Edit, TimeCircle } from "react-iconly";
 import { Class } from "../Context/AppContext";
 import { useState } from "react";
 import Modal from "../Ui/Modal";
 import EditClass from "./EditClass";
 import DeleteClass from "./DeleteClass";
+import Router from "next/router";
+import { ipcRenderer } from "electron";
 
 export default function TheClass(data: Class) {
     const [showDelete, setshowDelete] = useState(false)
@@ -35,14 +37,23 @@ export default function TheClass(data: Class) {
             <div className="flex gap-2 items-center">
                 <button
                     onClick={() => setshowEdit(true)}
-                    className="text-blue-700 p-1 rounded hover:bg-gray-100">
+                    className="text-blue-700 p-1 rounded hover:bg-blue-100">
                     <Edit size={"small"} />
                 </button>
                 <button
+                    onClick={() => {
+                        ipcRenderer.send("zoom",true)
+                        Router.push('/'.concat("menu/", "class/", data.id, "/schedule?label=", data.label))
+                    }}
+                    className="text-green-700 p-1 rounded hover:bg-green-100">
+                    <TimeCircle size={"small"} />
+                </button>
+                <button
                     onClick={() => setshowDelete(true)}
-                    className="text-red-700 p-1 rounded hover:bg-gray-100">
+                    className="text-red-700 p-1 rounded hover:bg-red-100">
                     <Delete size={"small"} />
                 </button>
+               
             </div>
         </div>)
 }

@@ -1,6 +1,7 @@
 import { useContext, createContext, useState, Dispatch, SetStateAction, ReactNode } from "react"
 import fetchApi from "../../utils/fetch";
 import { toast } from "react-hot-toast";
+import { convertBlobToBase64 } from "../../utils/fileToBase64";
 export enum Roles {
     Administrator = "Administrator",
     ClassTeacher = "ClassTeacher",
@@ -11,7 +12,7 @@ export interface guardian {
     cardId: string;
     phoneNumber: string;
     name: string;
-    students?: (StudentsEntity)[] | null;
+    Students?: (StudentsEntity)[] | null;
 }
 export interface File {
     id: string
@@ -28,8 +29,8 @@ export interface StudentsEntity {
     guardianId: string;
     classId: string;
     fileId?: null;
-    class: Class;
-    image?: File;
+    Class: Class;
+    Image?: File;
 
 }
 type studentState = {
@@ -37,6 +38,37 @@ type studentState = {
     newStudent: (props: FormData) => Promise<boolean>,
     updateStudent: (props: FormData) => Promise<boolean>,
     deleteStudent: (props: { studentId: string }) => Promise<boolean>,
+}
+type ScheduleMap = {
+    loading: boolean,
+    data: Schedule[],
+    error: boolean
+}
+
+export type Schedule = {
+    id: string;
+    weekDay: number
+    classId: string
+    subjectLabel: string
+    startTime: string
+    endTime: string
+    readonly created_at: Date
+}
+
+type upsertscheduleType = {
+    classId: string
+    schedules: {
+        weekDay: number
+        id: string
+        startTime: string
+        endTime: string
+        subjectLabel: string
+    }[]
+}
+type ScheduleState = {
+    data: Map<string, ScheduleMap>
+    getSchedule: (id: string) => Promise<ScheduleState['data']>
+    upsertschedule: (props: upsertscheduleType) => Promise<boolean>
 }
 type DismissionRequests = Map<string, Set<string>>
 type attendance = {
@@ -49,10 +81,29 @@ type attendance = {
 export interface Class {
     id: string;
     label: string;
-    students: StudentsEntity[];
+    Students: StudentsEntity[];
     _count: {
         students: number
     }
+}
+export interface Presence {
+    id: string;
+    weekDay: null;
+    created_at: Date;
+    subjectLabel: string;
+    startTime: Date;
+    endTime: Date;
+    attended: boolean;
+    scheduleId: string;
+    studentId: string;
+    Student: StudentsEntity
+}
+export interface PresenceHistory {
+    student: StudentsEntity;
+    presence: {
+        date: string,
+        data: Presence[]
+    }[]
 }
 type classState = {
     refreshing: boolean,
@@ -60,10 +111,12 @@ type classState = {
     error: boolean,
     data: Class[],
     getData: () => Promise<void>,
+    getPresenceHistory: (id: string, from: Date, to: Date) => Promise<PresenceHistory>,
     updateClass: (p: { classId: string, label: string }) => Promise<boolean>
     deleteClass: (p: { classId: string }) => Promise<boolean>
     newClass: (props: { label: string }) => Promise<boolean>,
 }
+
 type guardianState = {
     refreshing: boolean,
     loading: boolean,
@@ -98,12 +151,14 @@ type state = {
     title: string,
     user?: User,
     users: userState,
+    getAuthUser: () => Promise<void>
     setUser: Dispatch<SetStateAction<User>>,
     setTitle: Dispatch<SetStateAction<string>>,
     guardians: guardianState,
     classes: classState,
     students: studentState,
-    attendance: attendance
+    attendance: attendance,
+    scheduls: ScheduleState
 
 }
 
@@ -111,18 +166,59 @@ const Context = createContext<state>({
     title: "",
     setTitle: null as never,
     setUser: null as never,
-    guardians: null as never,
-    classes: null as never,
-    students: null as never,
-    users: null as never,
+    getAuthUser: null as never,
+    guardians: {
+        data: [],
+        deleteGuardian: null as never,
+        error: false,
+        getData: null as never,
+        loading: false,
+        newGuardian: null as never,
+        refreshing: false,
+        updateGuardian: null as never
+    },
+    classes: {
+        data: [],
+        deleteClass: null as never,
+        getData: null as never,
+        error: false,
+        loading: false,
+        newClass: null as never,
+        refreshing: false,
+        updateClass: null as never,
+        getPresenceHistory: null as never,
+    },
+    students: {
+        deleteStudent: null as never,
+        newStudent: null as never,
+        updateStudent: null as never
+    },
+    users: {
+
+        data: [],
+        deleteUser: null as never,
+        error: false,
+        getData: null as never,
+        loading: false,
+        newUser: null as never,
+        refreshing: false,
+        updatePassword: null as never,
+        updateUserData: null as never,
+
+    },
+    scheduls: {
+        data: new Map(),
+        getSchedule: async (id) => {
+            return new Map()
+        },
+        upsertschedule: null as never
+    },
     attendance: {
         dismissionRequests: new Map(),
         rejectRequest: () => { },
         appendRequest: () => { },
         dismiss: async () => false,
-
     }
-
 })
 
 export const useAppContext = () => useContext(Context);
@@ -131,6 +227,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
     const [dismissReqs, setdismissReqs] = useState<DismissionRequests>(new Map())
     const [users, setusers] = useState<userState>()
     const [guardian, setguardian] = useState<guardianState>()
+    const [schedules, setschedules] = useState<ScheduleState['data']>(new Map())
     const [user, setUser] = useState<User>()
     const [title, setTitle] = useState("")
 
@@ -141,7 +238,11 @@ export default function AppContext({ children }: { children: ReactNode }) {
         try {
             res.data ? init.refreshing = true : init.loading = true;
             setclasses(init);
-            res.data = await fetchApi("/get/classes")
+            res.data = (await fetchApi("/get/classes") as any[]).filter(e => e.id != null)
+            res.data.forEach(e => {
+                if (!schedules.has(e.id))
+                    getSchedule(e.id)
+            })
             res.error = false;
         } catch (error) {
             res.error = true;
@@ -194,6 +295,13 @@ export default function AppContext({ children }: { children: ReactNode }) {
 
             return false;
         }
+    }
+    async function getAuthUser() {
+
+        const data = await fetchApi("/auth/user")
+        setUser(data)
+
+
     }
     async function newClass(params: { label: string }) {
         type response = {
@@ -273,12 +381,26 @@ export default function AppContext({ children }: { children: ReactNode }) {
         }
     }
     async function newStudent(params: FormData) {
+        const firstName = params.get("firstName") as string
+        const lastName = params.get("lastName") as string
+        const classId = params.get("classId") as string
+        const guardianId = params.get("guardianId") as string
+        const image = await convertBlobToBase64(params.get("image") as Blob)
 
         try {
             const res = await fetchApi("/create/student", {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-                body: params
+                body: JSON.stringify({
+                    image,
+                    firstName,
+                    lastName,
+                    classId,
+                    guardianId
+                })
             })
             if (res.studentId) {
                 await getguardians();
@@ -296,10 +418,25 @@ export default function AppContext({ children }: { children: ReactNode }) {
     }
     async function updateStudent(params: FormData) {
 
+        const studentId = params.get("studentId") as string
+        const firstName = params.get("firstName") as string
+        const lastName = params.get("lastName") as string
+        const classId = params.get("classId") as string
+        const image = params.get("image") && await convertBlobToBase64(params.get("image") as Blob)
+
         try {
             const res = await fetchApi("/update/student", {
                 method: "POST",
-                body: params
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    studentId,
+                    image,
+                    firstName,
+                    lastName,
+                    classId,
+                })
             })
             if (res.success) {
                 await getguardians();
@@ -555,11 +692,87 @@ export default function AppContext({ children }: { children: ReactNode }) {
         }
 
     }
+    async function getSchedule(id: string) {
+        const oldMap = new Map(schedules);
+        const newMap = new Map(schedules);
+        oldMap.set(id, {
+            data: oldMap.get(id)?.data,
+            error: false,
+            loading: true,
+        })
+        setschedules(new Map(newMap))
+
+
+        try {
+
+            const data = (await fetchApi("/get/class/" + id + "/schedule"))
+            const map = new Map().set(id, {
+                loading: false,
+                data: data,
+                error: false
+            })
+            setschedules(map)
+            return map;
+        } catch (error) {
+            const map = new Map().set(id, {
+                loading: false,
+                data: oldMap.get(id)?.data,
+                error: true
+            })
+            setschedules(map)
+            return map;
+
+        }
+
+    }
+    async function upsertschedule(params: upsertscheduleType) {
+        try {
+            const res = await fetchApi("/upsert/schedule", {
+                method: "POST",
+                body: JSON.stringify(params),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            if (res.success) {
+                toast.success("")
+                await getSchedule(params.classId)
+                return true
+            }
+        }
+        catch {
+
+        }
+        return false
+
+
+    }
+    async function getPresenceHistory(id: string, from: Date, to: Date) {
+
+        try {
+            const res = await fetchApi(`/get/history/${id}`, {
+                method: "POST",
+                body: JSON.stringify({ from, to }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+
+            })
+            return res
+        }
+        catch {
+
+        }
+
+
+
+    }
 
     return (
         <Context.Provider value={{
             title,
             setTitle,
+            getAuthUser,
             user,
             setUser,
             guardians: {
@@ -575,7 +788,8 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 getData: getClasses,
                 newClass,
                 updateClass,
-                deleteClass
+                deleteClass,
+                getPresenceHistory
             },
             students: {
                 newStudent,
@@ -595,6 +809,11 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 deleteUser,
                 updatePassword,
                 updateUserData
+            },
+            scheduls: {
+                getSchedule,
+                data: schedules,
+                upsertschedule
             }
 
 

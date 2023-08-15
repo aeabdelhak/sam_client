@@ -25,8 +25,14 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (old) {
       try {
         setLoading(true)
+        const abortController=new AbortController()
         const url = "http://" + old + ":4000/connect"
-        const data = await (await fetch(url)).json();
+        setTimeout(() => {
+          abortController.abort()
+        }, 500);
+        const data = await (await fetch(url, {
+          signal:abortController.signal
+        })).json();
         setLoading(false)
 
         if (data == true) {
@@ -47,8 +53,14 @@ function MyApp({ Component, pageProps }: AppProps) {
     setnotConnectedToAwifi(false)
     await Promise.all(ips.map(async ip => {
       try {
+        const abortController=new AbortController()
+        setTimeout(() => {
+          abortController.abort()
+        }, 500);
         const url = "http://" + ip + ":4000/connect"
-        const data = await (await fetch(url)).json()
+        const data = await (await fetch(url, {
+          signal:abortController.signal
+        })).json()
         if (data == true) {
           config.remoteAddress = `http://${ip}:4000`
           localStorage.setItem("remoteIp", ip)
@@ -73,7 +85,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
 
-  if (notConnectedToAwifi) return <div className="flex flex-col h-screen w-screen  justify-center items-center">
+  if (notConnectedToAwifi) return <div className="flex select-none flex-col h-screen w-screen  justify-center items-center">
     <p className='text-xs lowercase font-light'>
       please Connect to A wifi first
     </p>
@@ -83,11 +95,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       try again
     </Button>
   </div>
-  if (loading) return <div className="flex h-screen w-screen  justify-center items-center">
+  if (loading) return <div className="fle select-nonex h-screen w-screen  justify-center items-center">
     <LoaderIcon className='scale-150' />
   </div>
   if (!remote) {
-    return <div className="flex gap-4 h-screen flex-col  w-screen  justify-center items-center">
+    return <div className="flex select-none gap-4 h-screen flex-col  w-screen  justify-center items-center">
       <p className='text-xs font-light'>
         unable to find a server within your network ,
       </p>

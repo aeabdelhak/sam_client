@@ -1,7 +1,7 @@
 export interface Class {
     id: string;
     label: string;
-    students?: (StudentsEntity)[] | null;
+    Students?: (StudentsEntity)[] | null;
   }
   export interface StudentsEntity {
     id: string;
@@ -12,7 +12,7 @@ export interface Class {
     fileId: string;
     guardian: guardian;
     Attendece?: (AttendeceEntity | null)[] | null;
-    image: Image;
+    Image: Image;
   }
   export interface guardian {
     id: string;

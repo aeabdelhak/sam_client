@@ -15,9 +15,9 @@ import Input from "../Ui/Input/Input";
 export default function Guardians({ data }: { data: guardian[] }) {
     const [query, setquery] = useState("")
     const [selectedStudent, setselectedStudent] = useState<string>()
-    const student = data?.flatMap(e => e?.students).find(e => e.id == selectedStudent);
+    const student = data?.flatMap(e => e?.Students).find(e => e.id == selectedStudent);
     const [openguardian, setopenguardian] = useState(false)
-    const filtered = data?.filter(e => e.name.includes(query) || e.phoneNumber.includes(query) || e.students.filter(e => e.firstName.includes(query) || e.lastName.includes(query)).length>0).map(e => ({...e,students:e.students.filter(e => e.firstName.includes(query) || e.lastName.includes(query))}));
+    const filtered = data?.filter(e => e.name.toLowerCase().includes(query?.toLowerCase()) || e.phoneNumber.includes(query?.toLowerCase()) || e.Students.filter(e => e.firstName.toLowerCase().includes(query?.toLowerCase()) || e.lastName.toLowerCase().includes(query?.toLowerCase())).length>0).map(e => ({...e,Students:e.Students.filter(e => e.firstName.toLowerCase().includes(query?.toLowerCase()) || e.lastName.toLowerCase().includes(query?.toLowerCase()))}));
     
     return (
         <div className="">
@@ -93,7 +93,6 @@ export default function Guardians({ data }: { data: guardian[] }) {
 }
 
 function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { setselectedStudent: Dispatch<SetStateAction<string>>, selectedStudent: string, index: number, guardian: guardian }) {
-    const [openStudent, setopenStudent] = useState(false)
 
     return (
         <motion.div
@@ -130,7 +129,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
                 </div>
             </div>
             <div className="text-xs text-end px-4 p-1">
-                {guardian.students.length} students
+                {guardian.Students.length} students
             </div>
             <div className="px-10">
                 <hr />
@@ -140,7 +139,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
             >
 
                 <>
-                    {guardian.students?.map((student, index) =>
+                    {guardian.Students?.map((student, index) =>
                         <motion.button
                             disabled={student.id == selectedStudent}
                             onClick={e => setselectedStudent(student.id)}
@@ -155,7 +154,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
                             key={student.id}
                             className="flex w-full rounded group hover:bg-gray-50 transition-all duration-500 disabled:bg-blue-700  disabled:text-white space-x-2 p-4 bg-white ">
                             <div className=" bg-gray-100 flex w-12 h-12  overflow-hidden shrink-0  text-white rounded-full   justify-center items-center">
-                                <img className="  object-cover h-full w-full" src={config.remoteAddress.concat("/", student.image.url)} alt="" />
+                                <img className="  object-cover h-full w-full" src={config.remoteAddress.concat("/", student.Image.url)} alt="" />
                             </div>
                             <div className="flex flex-1 items-start space-y-1 flex-col">
                                 <p className="text-sm ">
@@ -163,7 +162,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
                                 </p>
                                 <p
                                     className="text-xs font-extralight group-disabled:text-white/60 text-gray-500 ">
-                                    {student.class.label}
+                                    {student.Class.label}
                                 </p>
                             </div>
                         </motion.button>)}

@@ -3,6 +3,7 @@ import { Roles, useAppContext } from "../Context/AppContext";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
+import ModalCloser from "../Ui/ModalCloser";
 
 export default function NewUser() {
     const { close } = useModal()
@@ -33,10 +34,14 @@ export default function NewUser() {
 
         }} className="p-6 space-y-3">
             <div className="space-y-2">
-                <h1 className="font-semibold text-2xl">
+                <div className="flex justify-between">
+
+                <h1 className="font-semibold text-xl">
                     new user
-                </h1>
-                <p className="text-sm text-gray-500">
+                    </h1>
+                    <ModalCloser/>
+                </div>
+                <p className="text-xs text-gray-500">
                     fill the form bellow to create a new user
                 </p>
             </div>

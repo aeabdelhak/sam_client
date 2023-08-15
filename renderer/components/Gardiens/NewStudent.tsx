@@ -1,4 +1,4 @@
-import { FormEventHandler, useTransition } from "react";
+import { FormEventHandler, useState, useTransition } from "react";
 import { useAppContext } from "../Context/AppContext";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
@@ -6,7 +6,7 @@ import { useModal } from "../Ui/Modal";
 
 export default function NewStudent({ guardianId }: { guardianId: string }) {
     const { close } = useModal()
-    const [pending, start] = useTransition()
+    const [pending,setLoading]=useState(false)
     const { students: {
         newStudent
     }, classes: {
@@ -16,17 +16,16 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
     const save: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault()
         const formdata = new FormData(e.currentTarget)
-        formdata.append("guardianId",guardianId)
+        formdata.append("guardianId", guardianId)
+        setLoading(true)
         const res = await newStudent(formdata);
         if (res) close()
+        setLoading(false)
+
     }
 
     return (
-        <form onSubmit={e => {
-
-            start(() => save(e))
-
-        }} className="p-6 space-y-3">
+        <form onSubmit={save} className="p-6 space-y-3">
             <div className="space-y-2">
                 <h1 className="font-semibold text-2xl">
                     add a stuent
@@ -41,6 +40,7 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                         first name
                     </p>
                     <Input
+                        required
                         name="firstName"
                         disabled={pending}
                         placeholder="student first name"
@@ -51,6 +51,7 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                         last name
                     </p>
                     <Input
+                        required
                         name="lastName"
                         disabled={pending}
                         placeholder="student last name"
@@ -61,6 +62,7 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                         image
                     </p>
                     <Input
+                        required
                         name="image"
                         type="file"
                         accept="image/*"
@@ -75,6 +77,7 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                     <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">
 
                         <select
+                            required
                             className="appearance-none flex-1 focus:text-gray-900 text-gray-500 outline-none w-full bg-transparent px-2 py-2 text-sm "
                             name="classId" id="">
                             {data.map(e => (

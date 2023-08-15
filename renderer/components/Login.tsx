@@ -7,11 +7,13 @@ import { useRouter } from "next/router";
 import { LoaderIcon, toast } from "react-hot-toast";
 import { ipcRenderer } from "electron";
 import { config } from "../utils/fetch";
+import { useAppContext } from "./Context/AppContext";
 
 export default function Login() {
     const [rooting, setrooting] = useState(false)
     const [pending, start] = useTransition()
     const router = useRouter()
+    const {setUser}=useAppContext()
     const authenticate: FormEventHandler<HTMLFormElement> = async (ev) => {
         ev.preventDefault();
         const formdata = new FormData(ev.currentTarget)
@@ -33,6 +35,7 @@ export default function Login() {
         else toast.error("wrong username or password")
     }
     useEffect(() => {
+        setUser(undefined)
         ipcRenderer.send("init");
         router.events.on("routeChangeStart", e => setrooting(true))
         router.events.on("routeChangeComplete", e => setrooting(false))
