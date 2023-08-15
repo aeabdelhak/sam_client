@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import fetchApi, { config } from "../../../../utils/fetch";
 import Button from "../../../../components/Ui/button/Button";
 import type { Class, StudentsEntity } from "../../../../types/class";
@@ -7,9 +7,10 @@ import { LoaderIcon, toast } from "react-hot-toast";
 import Title from "../../../../components/Title";
 import Student from "../../../../components/class/Student";
 import { Schedule, useAppContext } from "../../../../components/Context/AppContext";
-
+let socket: WebSocket
 export default function Class() {
-    const [render, setrender] = useState(0)
+
+    const isMounted = useRef(true)
     const [data, setdata] = useState<Class>()
     const [currentSession, setcurrentSession] = useState<Schedule>()
     const [loading, setLoading] = useState(true)
@@ -27,29 +28,37 @@ export default function Class() {
         (import("../../../../utils/ring")).then((d) => (d.default.stop()))
 
     }
+
+    function connectToWs() {
+        socket = new WebSocket(config.remoteAddress.replace("http", "ws"), []);
+
+        socket.addEventListener("open", () => {
+            socket.send(JSON.stringify({ classId: router.query.id }));
+
+        })
+        socket.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data)
+            if (data.classId == router.query.id) {
+                appendRequest(data.classId, data.studentId)
+            }
+        });
+        socket.addEventListener("close", (ev) => {
+            if (isMounted.current) {
+                connectToWs()
+            }
+        })
+    }
+
     useEffect(() => {
-        let socket: WebSocket
         let intervale: NodeJS.Timer
         let getCurrentSessionintervale: NodeJS.Timer
         if (router.isReady) {
             getCurrentSession()
             getCurrentSessionintervale = setInterval(() => {
                 getCurrentSession()
-            }, 1000 * 60)
+            }, 1000 * 60);
 
-            socket = new WebSocket(config.remoteAddress.replace("http", "ws"), []);
-
-            socket.addEventListener("open", () => {
-                socket.send(JSON.stringify({ classId: router.query.id }));
-
-            })
-            socket.addEventListener('message', (event) => {
-                const data = JSON.parse(event.data)
-                if (data.classId == router.query.id) {
-                    appendRequest(data.classId, data.studentId)
-                }
-            });
-
+            connectToWs();
 
 
             (async () => {
@@ -61,8 +70,10 @@ export default function Class() {
             )()
         }
 
+
         return () => {
             intervale && clearInterval(intervale)
+            isMounted.current = false;
             getCurrentSessionintervale && clearInterval(getCurrentSessionintervale)
             socket?.removeEventListener("open", () => {
                 toast.success("Connected to the server");
