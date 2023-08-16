@@ -13,11 +13,11 @@ class audioNotif {
         audioNotif.audio.currentTime = 0;
     }
     static unmute() {
-        audioNotif.audio.volume = 1;
+        audioNotif.audio.muted=false
         audioNotif.muted = false
     }
     static mute() {
-        audioNotif.audio.volume = 0;
+        audioNotif.audio.muted=true
         audioNotif.muted = true
 
     }
