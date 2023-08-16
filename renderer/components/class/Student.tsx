@@ -9,6 +9,7 @@ import { CloseSquare } from "react-iconly";
 
 export default function Student({ student, requested }: { requested: boolean, student: StudentsEntity }) {
     const [open, setopen] = useState(false);
+    const lastAttended=[...student.Attendances].pop()
     const [attended, setattended] = useState(student.Attendances.find(e => e.access_date != null && e.dismission_date == null))
     
 
@@ -72,11 +73,11 @@ useEffect(() => {
             </div>
         </Modal>
         <button
-            disabled={!requested}
+            disabled={!requested && !(lastAttended?.dismission_requested && !lastAttended?.dismission_date)}
             onClick={async e => {
                 (await import("../../utils/ring")).default.play()
                 setopen(true)
-            }} className={"flex w-32 flex-col items-center   gap-2 p-2 ".concat(requested ? "animate-pulse bg-red-100" : attended ? " bg-green-100" : " grayscale bg-gray-100 ")}>
+            }} className={"flex w-32 flex-col items-center   gap-2 p-2 ".concat(requested ? "animate-pulse bg-red-200" :lastAttended?.dismission_requested && !lastAttended?.dismission_date ? " bg-red-100": attended ? " bg-green-100" : " grayscale bg-gray-100 ")}>
             <div className=" rounded overflow-hidden  h-20 w-20">
                 <img className=" object-cover h-full w-full " src={config.remoteImageUrl(student.Image)} alt="" />
             </div>
@@ -84,6 +85,7 @@ useEffect(() => {
                 <b>
                     {student.firstName.concat(' ', student.lastName)}
                 </b>
+
             </div>
         </button>
     </>

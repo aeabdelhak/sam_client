@@ -25,6 +25,7 @@ export interface Class {
     id: string;
     access_date: Date;
     dismission_date: Date;
+    dismission_requested: boolean;
     studentId: string;
   }
   export interface Image {
