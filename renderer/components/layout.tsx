@@ -22,7 +22,11 @@ export default function Layout({ children }: { children: ReactNode }) {
         })
         getData();
 
-
+        if (!user) {
+            getdata()
+        } else {
+            setloading(false)
+        }
         return () => { }
     }, [])
 
@@ -34,9 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     }
 
 
-    if (!user) {
-        getdata()
-    }
+
 
 
     if (loading) return <div className="w-screen  h-screen  flex">

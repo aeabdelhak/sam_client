@@ -18,6 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [notConnectedToAwifi, setnotConnectedToAwifi] = useState(false)
   const [remote, setremote] = useState<string>()
   const [loading, setLoading] = useState(true)
+  const [rerender, setrerender] = useState(0)
 
   const rooter = useRouter()
   async function lockUp() {
@@ -25,13 +26,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (old) {
       try {
         setLoading(true)
-        const abortController=new AbortController()
+        const abortController = new AbortController()
         const url = "http://" + old + ":4000/connect"
         setTimeout(() => {
           abortController.abort()
         }, 500);
         const data = await (await fetch(url, {
-          signal:abortController.signal
+          signal: abortController.signal
         })).json();
         setLoading(false)
 
@@ -53,13 +54,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     setnotConnectedToAwifi(false)
     await Promise.all(ips.map(async ip => {
       try {
-        const abortController=new AbortController()
+        const abortController = new AbortController()
         setTimeout(() => {
           abortController.abort()
         }, 500);
         const url = "http://" + ip + ":4000/connect"
         const data = await (await fetch(url, {
-          signal:abortController.signal
+          signal: abortController.signal
         })).json()
         if (data == true) {
           await config.setremoteAddress(`http://${ip}:4000`)
@@ -96,9 +97,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     </Button>
   </div>
   if (loading) return <div className="flex select-none h-screen w-screen  justify-center items-center">
-    
+
     <div className="scale-150">
-    <LoaderIcon className='' />
+      <LoaderIcon className='' />
     </div>
   </div>
   if (!remote) {
@@ -114,14 +115,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
 
-  return <Fragment>
-    <OnlineChecker>
-      <AppContext>
+  return <Fragment >
+      <OnlineChecker >
+    <AppContext>
         <Toast />
         {rooter.pathname == "/home" ?
           <Component {...pageProps} /> : <div className='flex flex-col min-h-screen'>
             <Navbar />
-            <Layout>
+            <Layout key={rerender}>
               <div className="p-4 flex-1 container mx-auto">
                 <Component {...pageProps} />
 
@@ -129,8 +130,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             </Layout>
           </div>
         }
-      </AppContext>
-    </OnlineChecker>
+    </AppContext>
+      </OnlineChecker>
   </Fragment>
 }
 

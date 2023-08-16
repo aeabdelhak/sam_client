@@ -304,7 +304,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
     async function getAuthUser() {
 
         const data = await fetchApi("/auth/user")
-        setUser(data)
+        if(data) setUser(data)
 
 
     }
@@ -591,6 +591,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 }
             })
             if (res) {
+                await getClasses();
                 setdismissReqs(e => {
                     const map = new Map(e);
                     const students = new Set(map.get(classId));

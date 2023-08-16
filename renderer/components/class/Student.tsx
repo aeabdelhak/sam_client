@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../Ui/Modal";
 import Button from "../Ui/button/Button";
 import { config } from "../../utils/fetch";
@@ -9,10 +9,20 @@ import { CloseSquare } from "react-iconly";
 
 export default function Student({ student, requested }: { requested: boolean, student: StudentsEntity }) {
     const [open, setopen] = useState(false);
+    const [attended, setattended] = useState(student.Attendances.find(e => e.access_date != null && e.dismission_date == null))
+    
+
     const router = useRouter();
     const { attendance: {
-        dismiss,rejectRequest
+        dismiss, rejectRequest
     } } = useAppContext()
+useEffect(() => {
+   const attended= student.Attendances.find(e => e.access_date != null && e.dismission_date == null)
+   setattended(attended)
+  return () => {
+    
+  }
+}, [student.Attendances])
 
 
 
@@ -25,9 +35,9 @@ export default function Student({ student, requested }: { requested: boolean, st
             <div className={" z-0 p-10 bg-gradient-to-br bg-white flex flex-col  rounded-lg gap-4 "}>
                 <div className="self-end">
                     <button
-                        onClick={()=>setopen(false)}
+                        onClick={() => setopen(false)}
                         className="appearance-none p-1 rounded-md outline-none hover:bg-gray-100">
-                        <CloseSquare/>
+                        <CloseSquare />
                     </button>
                 </div>
                 <div className=" mx-auto  flex aspect-square w-28 h-w-28  overflow-hidden shrink-0  text-white rounded   justify-center items-center">
@@ -46,13 +56,13 @@ export default function Student({ student, requested }: { requested: boolean, st
                     <Button
                         className="bg-red-700 "
                         onClick={e => {
-                            rejectRequest(student.classId,student.id)
+                            rejectRequest(student.classId, student.id)
                             setopen(false)
                         }}>
                         reject
                     </Button>
                     <Button
-                        onClick={() => dismiss(student.classId,student.id).then(r=>{
+                        onClick={() => dismiss(student.classId, student.id).then(r => {
                             if (r) setopen(false);
                         })}
                     >
@@ -66,9 +76,9 @@ export default function Student({ student, requested }: { requested: boolean, st
             onClick={async e => {
                 (await import("../../utils/ring")).default.play()
                 setopen(true)
-            }} className={"flex w-32 flex-col items-center   gap-2 p-2 ".concat(requested ? "animate-pulse bg-red-100" : "  hover:bg-gray-50")}>
+            }} className={"flex w-32 flex-col items-center   gap-2 p-2 ".concat(requested ? "animate-pulse bg-red-100" : attended ? " bg-green-100" : " grayscale bg-gray-100 ")}>
             <div className=" rounded overflow-hidden  h-20 w-20">
-                <img className="object-cover h-full w-full" src={config.remoteImageUrl(student.Image)} alt="" />
+                <img className=" object-cover h-full w-full " src={config.remoteImageUrl(student.Image)} alt="" />
             </div>
             <div className="flex  flex-col text-xs items-center">
                 <b>

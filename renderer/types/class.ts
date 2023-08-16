@@ -11,7 +11,8 @@ export interface Class {
     classId: string;
     fileId: string;
     guardian: guardian;
-    Attendece?: (AttendeceEntity | null)[] | null;
+    Attendances:AttendanceEntity[]
+    Attendece?: (AttendanceEntity | null)[] | null;
     Image: Image;
   }
   export interface guardian {
@@ -20,7 +21,7 @@ export interface Class {
     phoneNumber: string;
     name: string;
   }
-  export interface AttendeceEntity {
+  export interface AttendanceEntity {
     id: string;
     access_date: Date;
     dismission_date: Date;

@@ -14,6 +14,9 @@ const socket=useRef<WebSocket>(null)
     const [currentSession, setcurrentSession] = useState<Schedule>()
     const [loading, setLoading] = useState(true)
     const {
+        classes: {
+            getData
+        },
         scheduls: {
             data: schedules,
             getSchedule
@@ -35,11 +38,13 @@ const socket=useRef<WebSocket>(null)
             socket.current.send(JSON.stringify({ classId: router.query.id }));
 
         })
-        socket.current.addEventListener('message', (event) => {
+        socket.current.addEventListener('message',async (event) => {
             const data = JSON.parse(event.data)
             if (data.classId == router.query.id) {
-                appendRequest(data.classId, data.studentId)
+                data.studentId && appendRequest(data.classId, data.studentId)
             }
+            getData();
+            setdata(await fetchApi('/get/class/' + router.query.id))
         });
         socket.current.addEventListener("close", (ev) => {
             if (isMounted.current) {
