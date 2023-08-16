@@ -3,15 +3,16 @@
 
 
 import { InfoCircle } from "react-iconly";
-import { FormEventHandler, useState, useTransition,  } from "react";
+import { FormEventHandler, useState, useTransition, } from "react";
 import Router from "next/router";
 import { LoaderIcon, toast } from "react-hot-toast";
 import fetchApi from "../../utils/fetch";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
+import ModalCloser from "../Ui/ModalCloser";
 
-export default function NewClass({refresh}:{refresh:any}) {
-   const [loading,setLoading]=useState(false)
+export default function NewClass({ refresh }: { refresh: any }) {
+    const [loading, setLoading] = useState(false)
     const newClass: FormEventHandler<HTMLFormElement> = async (ev) => {
         ev.preventDefault();
         const formdata = new FormData(ev.currentTarget)
@@ -21,13 +22,13 @@ export default function NewClass({refresh}:{refresh:any}) {
             method: "POST",
             body: JSON.stringify({ label }),
             headers: {
-                "Content-Type":"application/json"
+                "Content-Type": "application/json"
             }
-       
+
         })
         if (res.classId) {
             await refresh();
-            await Router.push("/menu/class/"+res.classId)
+            await Router.push("/menu/class/" + res.classId)
             toast.success("Class created successfully")
         }
         else if (res.already) {
@@ -41,15 +42,12 @@ export default function NewClass({refresh}:{refresh:any}) {
         <form
             onSubmit={newClass}
             className="flex flex-col justify-center space-y-2 p-4 items-center">
-            <div className="py-10  font-mono flex justify-center items-center flex-col space-y-2">
-
-                <div className=" text-2xl font-bold ">
-                    new student
-                </div>
-                <div className=" ">
-                    fill the form bellow
-                </div>
+            <div className="flex justify-between">
+                <h1 className="font-semibold text-xl">
+                    new class    </h1>
+                <ModalCloser />
             </div>
+
 
             <div className="text-gray-400 flex flex-col  space-y-2 w-full p-4">
                 <Input
@@ -63,7 +61,7 @@ export default function NewClass({refresh}:{refresh:any}) {
                 <Button
                     disabled={loading}
                     className="self-end rounded">
-                    {loading && <LoaderIcon/>} create
+                    {loading && <LoaderIcon />} create
                 </Button>
             </div>
         </form>

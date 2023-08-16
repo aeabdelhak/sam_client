@@ -13,9 +13,10 @@ import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useAppContext } from "../Context/AppContext";
 import { useModal } from "../Ui/Modal";
+import ModalCloser from "../Ui/ModalCloser";
 
 export default function NewClass() {
-    const {close}=useModal()
+    const { close } = useModal()
     const [loading, startTransition] = useTransition()
     const { classes: {
         newClass
@@ -31,18 +32,19 @@ export default function NewClass() {
     return (
         <form
             onSubmit={ev => startTransition(() => create(ev))}
-            className="flex flex-col justify-center space-y-2 p-4 items-center">
-            <div className="py-10  font-mono flex justify-center items-center flex-col space-y-2">
+            className="flex flex-col justify-center space-y-2 p-4 ">
+            <div className="space-y-2">
 
-                <div className=" text-2xl font-bold ">
-                    new class
+                <div className="flex justify-between">
+                    <h1 className="font-semibold text-xl">
+                        new class    </h1>
+                    <ModalCloser />
                 </div>
-                <div className=" ">
-                    fill the form bellow
-                </div>
+                <p className="text-xs text-gray-500">
+                    fill the form bellow to create a new class
+                </p>
             </div>
-
-            <div className="text-gray-400 flex flex-col  space-y-2 w-full p-4">
+            <div className="text-gray-400 flex flex-col  space-y-2 w-full pt-4 ">
                 <Input
                     disabled={loading}
                     name="label"
@@ -52,6 +54,7 @@ export default function NewClass() {
 
                 <Button
                     disabled={loading}
+                    type="submit"
                     className="self-end rounded">
                     {loading && <LoaderIcon />} create
                 </Button>

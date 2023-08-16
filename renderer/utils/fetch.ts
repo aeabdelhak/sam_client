@@ -7,15 +7,15 @@ export class config {
     private static remoteAddress = ""
     static async setremoteAddress(str: string) {
         await new Promise((resolve) => {
-            this.remoteAddress = str
+            config.remoteAddress = str
             resolve(true);
         })
     }
     static getremoteAddress() {
-        return this.remoteAddress
+        return config.remoteAddress
     }
     static remoteImageUrl(img: Image) {
-        return this.getremoteAddress().concat("/", img.url)
+        return config.getremoteAddress().concat("/", img?.url)
     }
 }
 
