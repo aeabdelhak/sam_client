@@ -14,11 +14,8 @@ export default function OnlineChecker({ children }: { children: ReactNode }) {
         socket.current = new WebSocket(config.getremoteAddress().replace("http", "ws"));
 
         socket.current.addEventListener('open', (event) => {
-            if (!online) {
                 toast("connected to remote server")
                 setonline(true)
-            
-            }
 
         });
         socket.current.addEventListener('close', (event) => {
