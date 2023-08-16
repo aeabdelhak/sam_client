@@ -98,7 +98,7 @@ const socket=useRef<WebSocket>(null)
                 return false
             const [startHour, startMin] = stringToHoursAndMins(e.startTime)
             const firstDate = new Date()
-            firstDate.setHours(startHour, startMin)
+            firstDate.setHours(startHour, startMin,0)
 
             const [endHour, endMin] = stringToHoursAndMins(e.endTime)
             const endDate = new Date()
