@@ -158,12 +158,16 @@ type state = {
     classes: classState,
     students: studentState,
     attendance: attendance,
-    scheduls: ScheduleState
+    scheduls: ScheduleState,
+    remoteServer: string,
+    setremoteServer:Dispatch<SetStateAction<string>>,
 
 }
 
 const Context = createContext<state>({
     title: "",
+    remoteServer: "",
+    setremoteServer:()=>{},
     setTitle: null as never,
     setUser: null as never,
     getAuthUser: null as never,
@@ -230,6 +234,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
     const [schedules, setschedules] = useState<ScheduleState['data']>(new Map())
     const [user, setUser] = useState<User>()
     const [title, setTitle] = useState("")
+    const [remoteServer, setremoteServer] = useState("")
 
     async function getClasses() {
         const res = { ...classes }
@@ -417,7 +422,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
         }
     }
     async function updateStudent(params: FormData) {
-
+        
         const studentId = params.get("studentId") as string
         const firstName = params.get("firstName") as string
         const lastName = params.get("lastName") as string
@@ -772,6 +777,8 @@ export default function AppContext({ children }: { children: ReactNode }) {
         <Context.Provider value={{
             title,
             setTitle,
+            setremoteServer,
+            remoteServer,
             getAuthUser,
             user,
             setUser,

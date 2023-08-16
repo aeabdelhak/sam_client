@@ -181,7 +181,7 @@ export default function Index() {
                 <div className="flex">
                     <div className=" z-0 p-1 bg-gradient-to-br bg-white flex items-center rounded-lg gap-4">
                         <div className="   flex aspect-square w-28 h-w-28  overflow-hidden shrink-0  text-white rounded   justify-center items-center">
-                            <img className="object-cover h-full w-full" src={config.remoteAddress.concat("/", history.student.Image.url)} alt="" />
+                            <img className="object-cover h-full w-full" src={config.getremoteAddress().concat("/", history.student.Image.url)} alt="" />
                         </div>
                         <div className="flex flex-1 items-start text-blue-900 space-y-1 flex-col">
                             <p className="font-bold text-lg ">

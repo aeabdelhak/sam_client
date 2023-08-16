@@ -31,7 +31,7 @@ export default function Student({ student, requested }: { requested: boolean, st
                     </button>
                 </div>
                 <div className=" mx-auto  flex aspect-square w-28 h-w-28  overflow-hidden shrink-0  text-white rounded   justify-center items-center">
-                    <img className="object-cover h-full w-full" src={config.remoteAddress.concat("/", student.Image.url)} alt="" />
+                    <img className="object-cover h-full w-full" src={config.remoteImageUrl(student.Image)} alt="" />
                 </div>
                 <div className=" flex items-center text-blue-900 space-y-1 flex-col">
                     <p className="font-bold text-lg ">
@@ -68,7 +68,7 @@ export default function Student({ student, requested }: { requested: boolean, st
                 setopen(true)
             }} className={"flex w-32 flex-col items-center   gap-2 p-2 ".concat(requested ? "animate-pulse bg-red-100" : "  hover:bg-gray-50")}>
             <div className=" rounded overflow-hidden  h-20 w-20">
-                <img className="object-cover h-full w-full" src={config.remoteAddress.concat("/", student.Image.url)} alt="" />
+                <img className="object-cover h-full w-full" src={config.remoteImageUrl(student.Image)} alt="" />
             </div>
             <div className="flex  flex-col text-xs items-center">
                 <b>

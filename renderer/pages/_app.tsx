@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         setLoading(false)
 
         if (data == true) {
-          config.remoteAddress = `http://${old}:4000`
+          await config.setremoteAddress(`http://${old}:4000`)
           localStorage.setItem("remoteIp", old)
           setremote(`http://${old}:4000`)
           setnotConnectedToAwifi(false)
@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           signal:abortController.signal
         })).json()
         if (data == true) {
-          config.remoteAddress = `http://${ip}:4000`
+          await config.setremoteAddress(`http://${ip}:4000`)
           localStorage.setItem("remoteIp", ip)
           setremote(`http://${ip}:4000`)
           setLoading(false)
@@ -95,8 +95,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       try again
     </Button>
   </div>
-  if (loading) return <div className="fle select-nonex h-screen w-screen  justify-center items-center">
-    <LoaderIcon className='scale-150' />
+  if (loading) return <div className="flex select-none h-screen w-screen  justify-center items-center">
+    
+    <div className="scale-150">
+    <LoaderIcon className='' />
+    </div>
   </div>
   if (!remote) {
     return <div className="flex select-none gap-4 h-screen flex-col  w-screen  justify-center items-center">

@@ -1,14 +1,27 @@
 import Router from "next/router"
 import { toast } from "react-hot-toast"
+import { Image } from "../types/class"
 
 type props = Parameters<typeof fetch>
-
-export const config = {
-    remoteAddress: ""
+export class config {
+    private static remoteAddress = ""
+    static async setremoteAddress(str: string) {
+        await new Promise((resolve) => {
+            this.remoteAddress = str
+            resolve(true);
+        })
+    }
+    static getremoteAddress() {
+        return this.remoteAddress
+    }
+    static remoteImageUrl(img: Image) {
+        return this.getremoteAddress().concat("/", img.url)
+    }
 }
+
 export default async function fetchApi(...props: props) {
     const token = localStorage.getItem("authToken")
-    const url = `${config.remoteAddress}`
+    const url = config.getremoteAddress()
     try {
 
         const res = await fetch(url + props[0], {

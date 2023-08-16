@@ -39,8 +39,10 @@ let mainWindow: BrowserWindow
 ipcMain.on("loginSuccess", () => {
   mainWindow.webContents.clearHistory();
   mainWindow.resizable = true;
-  mainWindow.setSize(1400, 700, true)
-  mainWindow.setMinimumSize(1400, 700)
+  mainWindow.setSize(1200, 600, true)
+  mainWindow.setMinimumSize(1200, 600)
+  mainWindow.center()
+
 })
 ipcMain.on("remoteLockUp", async (event) => {
   const connected = await getConnectedIPAddresses()
@@ -61,6 +63,7 @@ ipcMain.on("init", async () => {
   mainWindow.webContents.clearHistory();
   mainWindow.setMinimumSize(400, 450)
   mainWindow.setSize(400, 450, true)
+  mainWindow.center()
   mainWindow.resizable = false;
 
 }

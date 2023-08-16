@@ -30,7 +30,7 @@ export default function Class() {
     }
 
     function connectToWs() {
-        socket = new WebSocket(config.remoteAddress.replace("http", "ws"), []);
+        socket = new WebSocket(config.getremoteAddress().replace("http", "ws"), []);
 
         socket.addEventListener("open", () => {
             socket.send(JSON.stringify({ classId: router.query.id }));

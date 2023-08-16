@@ -5,7 +5,7 @@ let socket
 export default function OnlineChecker({ children }: { children: ReactNode }) {
     const [working, setworking] = useState<boolean>()
     useEffect(() => {
-        socket = new WebSocket(config.remoteAddress.replace("http", "ws"));
+        socket = new WebSocket(config.getremoteAddress().replace("http", "ws"));
 
         socket.addEventListener('open', (event) => {
             setworking(true)
@@ -23,11 +23,11 @@ export default function OnlineChecker({ children }: { children: ReactNode }) {
             });
             socket.removeEventListener('error', (event) => {
                 setworking(false)
-                socket = new WebSocket(config.remoteAddress.replace("http", "ws"));
+                socket = new WebSocket(config.getremoteAddress().replace("http", "ws"));
             });
             socket.removeEventListener('close', (event) => {
                 setworking(false)
-                socket = new WebSocket(config.remoteAddress.replace("http", "ws"));
+                socket = new WebSocket(config.getremoteAddress().replace("http", "ws"));
 
             });
         }

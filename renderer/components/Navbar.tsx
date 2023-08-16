@@ -2,12 +2,23 @@ import { ipcRenderer } from "electron";
 import { Logout, VolumeOff, VolumeUp } from "react-iconly";
 import NavArrows from "./Ui/button/back";
 import { useAppContext } from "./Context/AppContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import audioNotif from "../utils/ring";
 
 export default function Navbar() {
     const [muted, setmuted] = useState(audioNotif.muted)
     const { title, user } = useAppContext()
+    const [curreTime, setcurreTime] = useState<Date>(new Date())
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setcurreTime(new Date())
+        }, 1000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
+
 
     return (
         <div className="  sticky top-0 bg-white z-20 ">
@@ -22,6 +33,15 @@ export default function Navbar() {
                 </div>
                 <div className=" grid   overflow-hidden ">
                     <div className="flex w-full space-x-2 items-center">
+                        <div className=" flex-1 ">
+                            <p className=" text-xs l w-full ">
+                                {curreTime?.toLocaleTimeString("fr", {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    second: "2-digit"
+                                })}
+                            </p>
+                        </div>
                         <button
                             onClick={() => setmuted(e => {
                                 !e ? audioNotif.mute() : audioNotif.unmute()
@@ -39,7 +59,7 @@ export default function Navbar() {
                             </p>
                         </div>
                         <div className="flex">
-                         
+
                         </div>
                     </div>
 

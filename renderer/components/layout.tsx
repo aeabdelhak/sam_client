@@ -11,8 +11,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     const {
         user,
         getAuthUser, classes: {
-        getData,
-    } } = useAppContext()
+            getData,
+        } } = useAppContext()
     const router = useRouter();
     const [zoom, setzoom] = useState(true)
     const [loading, setloading] = useState(true)
@@ -21,25 +21,25 @@ export default function Layout({ children }: { children: ReactNode }) {
             setzoom(data);
         })
         getData();
- 
 
-        return () => {}
+
+        return () => { }
     }, [])
-  
+
     function getdata() {
-        !loading&&  setloading(true)
+        !loading && setloading(true)
         getAuthUser().then(e => {
             setloading(false)
         })
     }
-    
-    
+
+
     if (!user) {
         getdata()
     }
 
-    
-    if (loading) return <div className="w-screen h-full flex">
+
+    if (loading) return <div className="w-screen  h-screen  flex">
         <div className="m-auto scale-150">
             <LoaderIcon />
         </div>
@@ -49,12 +49,12 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className=" flex  flex-1  h-full ">
             <Sidebar />
             <AnimatePresence
-            mode="popLayout"
+                mode="popLayout"
             >
                 <motion.div
                     key={router.pathname}
                     transition={{
-                        duration:0.5
+                        duration: 0.5
                     }}
                     animate={{
                         translateX: 0,
@@ -64,18 +64,18 @@ export default function Layout({ children }: { children: ReactNode }) {
 
                     }}
                     initial={{
-                        translateX: !zoom ? "-100%":"100%",
+                        translateX: !zoom ? "-100%" : "100%",
                         opacity: 0,
-                        scale:1,
+                        scale: 1,
                         filter: "blur(0.5rem)"
 
-                        
+
                     }}
                     exit={{
-                        translateX:!zoom? "100%":"-100%",
+                        translateX: !zoom ? "100%" : "-100%",
                         opacity: 0,
                         filter: "blur(1.5rem)"
-                        
+
 
                     }}
                     className="   h-full ml-24 flex-1 flex flex-col ">

@@ -154,7 +154,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
                             key={student.id}
                             className="flex w-full rounded group hover:bg-gray-50 transition-all duration-500 disabled:bg-blue-700  disabled:text-white space-x-2 p-4 bg-white ">
                             <div className=" bg-gray-100 flex w-12 h-12  overflow-hidden shrink-0  text-white rounded-full   justify-center items-center">
-                                <img className="  object-cover h-full w-full" src={config.remoteAddress.concat("/", student.Image.url)} alt="" />
+                                <img className="  object-cover h-full w-full" src={config.remoteImageUrl(student.Image)} alt="" />
                             </div>
                             <div className="flex flex-1 items-start space-y-1 flex-col">
                                 <p className="text-sm ">
