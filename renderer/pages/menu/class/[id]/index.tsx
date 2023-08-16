@@ -7,9 +7,8 @@ import { LoaderIcon, toast } from "react-hot-toast";
 import Title from "../../../../components/Title";
 import Student from "../../../../components/class/Student";
 import { Schedule, useAppContext } from "../../../../components/Context/AppContext";
-let socket: WebSocket
 export default function Class() {
-
+const socket=useRef<WebSocket>(null)
     const isMounted = useRef(true)
     const [data, setdata] = useState<Class>()
     const [currentSession, setcurrentSession] = useState<Schedule>()
@@ -30,19 +29,19 @@ export default function Class() {
     }
 
     function connectToWs() {
-        socket = new WebSocket(config.getremoteAddress().replace("http", "ws"), []);
+        socket.current = new WebSocket(config.getremoteAddress().replace("http", "ws"), []);
 
-        socket.addEventListener("open", () => {
-            socket.send(JSON.stringify({ classId: router.query.id }));
+        socket.current.addEventListener("open", () => {
+            socket.current.send(JSON.stringify({ classId: router.query.id }));
 
         })
-        socket.addEventListener('message', (event) => {
+        socket.current.addEventListener('message', (event) => {
             const data = JSON.parse(event.data)
             if (data.classId == router.query.id) {
                 appendRequest(data.classId, data.studentId)
             }
         });
-        socket.addEventListener("close", (ev) => {
+        socket.current.addEventListener("close", (ev) => {
             if (isMounted.current) {
                 connectToWs()
             }
@@ -75,10 +74,10 @@ export default function Class() {
             intervale && clearInterval(intervale)
             isMounted.current = false;
             getCurrentSessionintervale && clearInterval(getCurrentSessionintervale)
-            socket?.removeEventListener("open", () => {
+            socket.current?.removeEventListener("open", () => {
                 toast.success("Connected to the server");
             })
-            socket?.removeEventListener('message', (event) => {
+            socket.current?.removeEventListener('message', (event) => {
                 console.log((event.data))
             });
             (import("../../../../utils/ring")).then((d) => (d.default.stop()))
