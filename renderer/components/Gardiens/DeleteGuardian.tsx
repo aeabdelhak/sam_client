@@ -1,13 +1,14 @@
-import { User, guardian, useAppContext } from "../Context/AppContext";
+import {  guardian, useAppContext } from "../Context/AppContext";
 import { useModal } from "../Ui/Modal";
 import Button from "../Ui/button/Button";
 import { useState } from "react";
 import { LoaderIcon } from "react-hot-toast";
 import ModalCloser from "../Ui/ModalCloser";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function DeleteGuardian(user: guardian) {
     const [loading, setloading] = useState(false)
-    const { close } = useModal()
+    const translations = useTranslation()
     const {
         guardians: {
             deleteGuardian
@@ -17,7 +18,7 @@ export default function DeleteGuardian(user: guardian) {
         <div className={" z-0 p-6 bg-gradient-to-br bg-white flex flex-col  rounded-lg gap-4 "}>
             <div className="flex justify-between">
             <h1 className="text-xl ">
-                Delete <b className="text-blue-900">
+                {translations.delete} <b className="text-blue-900">
                     {user.name}
                 </b>
 
@@ -25,10 +26,11 @@ export default function DeleteGuardian(user: guardian) {
             <ModalCloser/>
             </div>
             <p className="text-xs text-red-600">
-                all students under this guardian will be deleted
+                {translations.deleteGuardianDangerMsg}
             </p>
             <p className="text-sm">
-                are you sure you want to delete this gariden ?
+            {translations.deleteGuardianAsk}
+
             </p>
 
             <div className="flex justify-end">
@@ -42,7 +44,7 @@ export default function DeleteGuardian(user: guardian) {
                     }}>
                     {
                         loading ? <LoaderIcon /> :
-                            "delete"
+                            translations.delete
                     }
 
                 </Button>

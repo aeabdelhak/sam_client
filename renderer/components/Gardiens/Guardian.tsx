@@ -9,6 +9,7 @@ import Button from "../Ui/button/Button";
 import EditAStudent from "./EditAStudent";
 import GuardianMenu from "./GuardianMenu";
 import Input from "../Ui/Input/Input";
+import { useTranslation } from "../../utils/translations/Context";
 
 
 
@@ -18,6 +19,7 @@ export default function Guardians({ data }: { data: guardian[] }) {
     const student = data?.flatMap(e => e?.Students).find(e => e.id == selectedStudent);
     const [openguardian, setopenguardian] = useState(false)
     const filtered = data?.filter(e => e.name.toLowerCase().includes(query?.toLowerCase()) || e.phoneNumber.includes(query?.toLowerCase()) || e.Students.filter(e => e.firstName.toLowerCase().includes(query?.toLowerCase()) || e.lastName.toLowerCase().includes(query?.toLowerCase())).length>0).map(e => ({...e,Students:e.Students.filter(e => e.firstName.toLowerCase().includes(query?.toLowerCase()) || e.lastName.toLowerCase().includes(query?.toLowerCase()))}));
+    const translations=useTranslation()
     
     return (
         <div className="">
@@ -27,17 +29,18 @@ export default function Guardians({ data }: { data: guardian[] }) {
 
             <div className="flex mb-6 flex-col gap-4">
                 <h1 className="font-semibold text-3xl">
-                    guardians and students
+                {translations.guarndiansAndStudents}
+
                 </h1>
                 <p className="text-xs">
-                    manage both guardians and students
+                {translations.guardianPageDesc}
                 </p>
             </div>
             <div className=" max-w-sm pb-4">
                 <Input
                     value={query}
                 onChange={e=>setquery(e.target.value ?? "")}
-                placeholder="search"
+                placeholder={translations.search}
                 icon={<Search
                     size={"small"}
                 />}
@@ -47,12 +50,12 @@ export default function Guardians({ data }: { data: guardian[] }) {
                 <div className="col-span-2 rounded-lg bg-slate-50 p-6">
                     <div className="flex justify-between pb-6">
                         <h1 className="font-semibold text-xl">
-                            guardians
+                            {translations.guardians}
                         </h1>
                         <div className="">
                             <Button
                                 onClick={() => setopenguardian(true)}>
-                                Create a guardian
+                                {translations.CreateaGuardian}
                             </Button>
                         </div>
                     </div>
@@ -75,7 +78,7 @@ export default function Guardians({ data }: { data: guardian[] }) {
                         <People
                             size={"large"} />
                         <p>
-                            select a student
+                            {translations.selectAStudent}
                         </p>
                     </div> : <AnimatePresence presenceAffectsLayout
                     mode="wait">
@@ -93,6 +96,7 @@ export default function Guardians({ data }: { data: guardian[] }) {
 }
 
 function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { setselectedStudent: Dispatch<SetStateAction<string>>, selectedStudent: string, index: number, guardian: guardian }) {
+    const translations=useTranslation()
 
     return (
         <motion.div
@@ -107,7 +111,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
          
             <div
                 key={guardian.id}
-                className="flex w-full group transition-all disabled:bg-blue-700  items-center disabled:text-white space-x-2 p-4 bg-white rounded-md ">
+                className="flex w-full group transition-all disabled:bg-blue-700  items-center disabled:text-white gap-2 p-4 bg-white rounded-md ">
                 <div className="bg-blue-800 flex text-xs  text-white rounded-full w-8 h-8  justify-center items-center">
                 {guardian.name.split(" ").map(a=>a.at(0)).join("")}
                     
@@ -129,7 +133,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
                 </div>
             </div>
             <div className="text-xs text-end px-4 p-1">
-                {guardian.Students.length} students
+                {guardian.Students.length} {translations.students}
             </div>
             <div className="px-10">
                 <hr />
@@ -152,7 +156,7 @@ function Guardian({ index, guardian, setselectedStudent, selectedStudent }: { se
                                 }
                             }}
                             key={student.id}
-                            className="flex w-full rounded group hover:bg-gray-50 transition-all duration-500 disabled:bg-blue-700  disabled:text-white space-x-2 p-4 bg-white ">
+                            className="flex w-full rounded group hover:bg-gray-50 transition-all duration-500 disabled:bg-blue-700  disabled:text-white gap-2 p-4 bg-white ">
                             <div className=" bg-gray-100 flex w-12 h-12  overflow-hidden shrink-0  text-white rounded-full   justify-center items-center">
                                 <img className="  object-cover h-full w-full" src={config.remoteImageUrl(student.Image)} alt="" />
                             </div>

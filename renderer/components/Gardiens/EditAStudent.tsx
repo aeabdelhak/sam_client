@@ -5,9 +5,11 @@ import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { FormEventHandler, useState, useTransition } from "react";
 import { LoaderIcon } from "react-hot-toast";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function EditAStudent({ student }: { student: StudentsEntity }) {
     const [showDelete, setshowDelete] = useState(false)
+    const translations=useTranslation()
     const {
         students: {
             updateStudent,
@@ -58,13 +60,13 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                     disabled={!showDelete}
                     onClick={e => setshowDelete(false)}
                     className="disabled:bg-blue-700 disabled:!text-white bg-transparent !text-gray-500">
-                    informations
+                    {translations.informations}
                 </Button>
                 <Button
                     disabled={showDelete}
                     onClick={e => setshowDelete(true)}
                     className="disabled:bg-red-700 disabled:!text-white bg-transparent !text-gray-500">
-                    delete
+                    {translations.delete}
                 </Button>
             </div>
             <AnimatePresence
@@ -82,7 +84,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                     className="flex  z-10 flex-col gap-2 p-4">
                     <label>
                         <p className="text-sm ">
-                            first name
+                            {translations.firstName}
                         </p>
                         <Input
                             disabled={pending}
@@ -90,36 +92,39 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                             className="bg-transparent!"
                             name="firstName"
                             defaultValue={student.firstName}
-                            placeholder="student first name"
+                            placeholder={translations.firstName}
                         />
                     </label>
                     <label>
                         <p className="text-sm ">
-                            last name
+                        {translations.lastName}
+
                         </p>
                         <Input
                             disabled={pending}
 
                             defaultValue={student.lastName}
                             name="lastName"
-                            placeholder="student last name"
+                            placeholder=                            {translations.lastName}
                         />
                     </label>
                     <label>
                         <p className="text-sm ">
-                            image
+                        {translations.image}
+
                         </p>
                         <Input
                             name="image"
                             type="file"
                             accept="image/*"
                             disabled={pending}
-                            placeholder="student image"
+                            placeholder=                            {translations.image}
+
                         />
                     </label>
                     <label>
                         <p className="text-sm ">
-                            class
+                            {translations.class}
                         </p>
                         <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">
 
@@ -143,7 +148,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                             disabled={pending}
 
                         >
-                            {pending ? <LoaderIcon /> : "save"}
+                            {pending ? <LoaderIcon /> : translations.save}
                         </Button>
                     </div>
                 </motion.form> :
@@ -155,14 +160,14 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                         className="space-y-2 p-4 shadow-xl rounded-xl"
                     >
                         <p className="font-extralight">
-                            are you sure you want to delete this student ?
+                            {translations.deleteStudentAsk}
                         </p>
                         <div className="flex justify-end">
                             <Button
                                 disabled={deleting}
                                 onClick={e => startDeleting(() => deleteMe())}
                                 className="bg-red-700 ">
-                                delete
+                                {translations.delete}
                             </Button>
                         </div>
                     </motion.div>

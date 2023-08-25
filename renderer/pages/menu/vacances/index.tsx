@@ -1,80 +1,51 @@
-
 import { useRouter } from "next/router"
-import Title from "../../../../components/Title"
-import { Delete, Plus } from "react-iconly"
-import { FormEventHandler, useEffect, useState, useTransition } from "react"
-import { randomUUID } from "crypto"
-import { useAppContext } from "../../../../components/Context/AppContext"
-import Button from "../../../../components/Ui/button/Button"
+import { FormEventHandler, useEffect, useState } from "react"
+import { Vacancy, useAppContext } from "../../../components/Context/AppContext"
+import Title from "../../../components/Title"
 import { LoaderIcon } from "react-hot-toast"
-import { translation, useTranslation } from "../../../../utils/translations/Context"
-
-const weekdays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-]
+import { Delete, Plus } from "react-iconly"
+import { randomUUID } from "crypto"
+import Button from "../../../components/Ui/button/Button"
+import { useTranslation } from "../../../utils/translations/Context"
 
 export default function ScheduleContent() {
+    const [upserting, start] = useState(false)
     const router = useRouter()
-    const [fetching, setfetching] = useState(true)
-    const [loading, start] = useState(false)
     const [render, rerender] = useState(0)
     const {
-        scheduls: {
-            getSchedule,
+        vacances: {
+            getVacances,
+            loading,
             data,
-            upsertschedule
+            upsertVacances
         }
 
     } = useAppContext()
+    if (!loading && !data) getVacances();
 
-    useEffect(() => {
-        if (router.isReady) {
-
-            getSchedule(router.query.id as string ?? "").then(e => {
-                rerender(render + 1)
-                setfetching(false)
-            }).catch(e => {
-                setfetching(false)
-            });
-        }
-
-        return () => {
-
-        }
-    }, [router.isReady])
-    const schedule = data.get(router.query.id as string)
+   
 
     const save: FormEventHandler<HTMLFormElement> = async ev => {
         ev.preventDefault()
         const formdata = new FormData(ev.currentTarget)
         const startTimes = formdata.getAll("startTime[]")
         const endTimes = formdata.getAll("endTime[]")
-        const subjectLabel = formdata.getAll("subjectLabel[]")
+        const labels = formdata.getAll("label[]")
         const ids = formdata.getAll("id")
-        const weekDays = formdata.getAll("weekDay")
 
         const data = startTimes.map((v, i) => ({
             id: ids.at(i).toString() == "" ? undefined : ids.at(i).toString(),
-            startTime: v.toString(),
-            weekDay: Number(weekDays.at(i).toString()),
-            endTime: endTimes.at(i).toString(),
-            subjectLabel: subjectLabel.at(i).toString(),
+            startDate: new Date(v.toString()),
+            endDate: new Date(endTimes.at(i).toString()),
+            label: labels.at(i).toString(),
         }))
-        start(true)
-        const res = await upsertschedule({
-            classId: router.query.id as string,
-            schedules: data
-        });
+        
+        const res = await upsertVacances(data);
         res && rerender(e => e + 1)
         start(false)
 
     }
+
 
     return (
 
@@ -84,9 +55,9 @@ export default function ScheduleContent() {
         >
 
             <Title
-                title={(router.query.label as string ?? '').concat(" schedule")}
+                title={"Vacances "}
             />
-            {loading
+            {upserting
                 &&
                 <div className="fixed inset-0 flex justify-center items-center bg-white/20">
                     <div className="scale-[4]">
@@ -96,31 +67,27 @@ export default function ScheduleContent() {
 
             }
 
-            <div className=" flex flex-col   ">
-                {fetching && !schedule?.data ?
-                    weekdays.map((e) => (
-                        <WeekDayPlaceHolder
-                            key={e}
-                            label={e}
-                        />
-                    ))
+            <div className="space-y-4 ">
+                {loading && !data ?
+                    <PlaceHolder
+                            
+                    />
+                    
 
-                    : weekdays.map((e, index) => (
-                        <WeekDay
-                            savedSchedule={(schedule?.data as any[])?.filter(e => e?.weekDay == index)}
-                            n={index}
-                            key={e}
-                            label={e}
-                        />
-                    ))}
+                    :
+                    <Vacancies
+                        saved={data}
+              
+                    />}
+                    
             </div>
             <SaveBtn />
         </form>
     )
 }
 function SaveBtn() {
-    const [enabled, setenabled] = useState(false)
     const translations=useTranslation()
+    const [enabled, setenabled] = useState(false)
     useEffect(() => {
         document.addEventListener("touched", () => setenabled(true))
 
@@ -139,21 +106,12 @@ function SaveBtn() {
     </div>
 }
 
-function WeekDay({ label, savedSchedule, n }: {
-    savedSchedule: {
-        id: string;
-        weekDay: number;
-        classId: string;
-        subjectLabel: string;
-        startTime: string;
-        endTime: string;
-    }[],
-    label: string, n: number
+function Vacancies({ saved }: {
+    saved: Vacancy[],
 }) {
-    const [savedschedules, setsavedschedules] = useState(savedSchedule)
+    const [savedVacancies, setsavedVacancies] = useState(saved)
     const [schedule, setschedule] = useState<Set<string>>(new Set())
-    const translations = useTranslation()
-
+const translations=useTranslation()
     function newSc() {
         setschedule(e => {
             const d = new Set(e)
@@ -162,38 +120,39 @@ function WeekDay({ label, savedSchedule, n }: {
         })
     }
 
-
+    function formatDate(thedate:any) {
+        const date = new Date(thedate)
+        return date.getFullYear().toString().concat(
+            "-",
+            (date.getMonth() + 1).toString().padStart(2, "0"),
+            "-",
+            date.getDate().toString().padStart(2, "0"),
+        )
+    }
 
     return <div
-        className="  rounded p-4">
-        <div className="flex py-2 justify-between">
-            <b className="text-blue-800">
-                {translations[label]}
-            </b>
+        className="">
+        <div className="flex justify-between">
             <button
                 type="button"
                 onClick={newSc}
-                className="text-blue-700 p-1 rounded hover:bg-blue-100">
+                className="text-blue-700 flex items-center text-xs gap-2 p-1 rounded hover:bg-blue-100">
                 <Plus size={"small"} />
+                {translations.newVacancy}
             </button>
         </div>
-
-
-        <div className={" divide-y px-2 rounded-lg ".concat((savedschedules.length > 0 || Array.from(schedule).length > 0) ? "shadow-lg" : "")}>
-            {savedschedules?.map(e => (
+        <div className="shadow-xl divide-y p-2 rounded-lg">
+            {savedVacancies?.map(e => (
                 (
                     <div
                         key={e.id}
                         className=" text-sm p-2  grid grid-cols-4  ">
-                        <input type="hidden" name="weekDay" value={n} />
                         <input type="hidden" name="id" value={e.id} />
                         <label className=" flex gap-2 items-center">
-                            <b className="text-xs text-gray-500 font-medium ">
-                            {translations.startsAt}
-                            </b>
+                            <b className="text-xs text-gray-500 font-medium ">{translations.startsAt}</b>
                             <input
                                 onChange={() => document.dispatchEvent(new Event("touched"))}
-                                defaultValue={e.startTime} required className="bg-transparent px-4 py-1 border rounded-md" type="time" name="startTime[]" id="" />
+                                defaultValue={formatDate(e.startDate)} required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="startTime[]" id="" />
                         </label>
                         <label className=" flex gap-2 items-center">
                             <b className="text-xs text-gray-500 font-medium ">
@@ -202,24 +161,23 @@ function WeekDay({ label, savedSchedule, n }: {
                             <input
                                 onChange={() => document.dispatchEvent(new Event("touched"))}
 
-                                defaultValue={e.endTime} required className="bg-transparent px-4 py-1 border rounded-md" type="time" name="endTime[]" id="" />
+                                defaultValue={formatDate(e.endDate)} required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="endTime[]" id="" />
                         </label>
                         <label className=" flex gap-2 items-center">
                             <b className="text-xs text-gray-500 font-medium ">
-                            {translations.subject}
-
+                            {translations.name}
                             </b>
                             <input
                                 onChange={() => document.dispatchEvent(new Event("touched"))}
 
-                                defaultValue={e.subjectLabel} required className="bg-transparent px-4 py-1 border rounded-md" type="text" name="subjectLabel[]" id="" />
+                                defaultValue={e.label} required className="bg-transparent px-4 py-1 border rounded-md" type="text" name="label[]" id="" />
                         </label>
                         <div className="flex justify-end">
                             <button
                                 type="button"
                                 onClick={() => {
                                     document.dispatchEvent(new Event("touched"))
-                                    setsavedschedules(sc => sc.filter(sc => sc.id != e.id))
+                                    setsavedVacancies(sc => sc.filter(sc => sc.id != e.id))
                                 }}
                                 className="text-red-700 p-1 rounded hover:bg-red-100">
                                 <Delete size={"small"} />
@@ -233,38 +191,33 @@ function WeekDay({ label, savedSchedule, n }: {
                     key={e}
                     className=" text-sm p-2  grid grid-cols-4  ">
                     <input type="hidden" name="id" value={""} />
-                    <input type="hidden" name="weekDay" value={n} />
                     <label className=" flex gap-2 items-center">
 
                         <b className="text-xs text-gray-500 font-medium ">
                         {translations.startsAt}
-
                         </b>
                         <input
                             onChange={() => document.dispatchEvent(new Event("touched"))}
-
-                            required className="bg-transparent px-4 py-1 border rounded-md" type="time" name="startTime[]" id="" />
+                            required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="startTime[]" id="" />
                     </label>
                     <label className=" flex gap-2 items-center">
                         <b className="text-xs text-gray-500 font-medium ">
                         {translations.endsAt}
-
                         </b>
                         <input
                             onChange={() => document.dispatchEvent(new Event("touched"))}
 
-                            required className="bg-transparent px-4 py-1 border rounded-md" type="time" name="endTime[]" id="" />
+                            required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="endTime[]" id="" />
                     </label>
                     <label className=" flex gap-2 items-center">
                         <b className="text-xs text-gray-500 font-medium ">
-                        {translations.subject}
-
+                        {translations.name}
                         </b>
-                        <input required className="bg-transparent px-4 py-1 border rounded-md" type="text" name="subjectLabel[]" id="" />
+                        <input required className="bg-transparent px-4 py-1 border rounded-md" type="text" name="label[]" id="" />
                     </label>
                     <div className="flex justify-end">
                         <button
-                            type="submit"
+                            type="button"
                             onClick={() => {
                                 document.dispatchEvent(new Event("touched"))
 
@@ -284,20 +237,12 @@ function WeekDay({ label, savedSchedule, n }: {
 
     </div>
 }
-function WeekDayPlaceHolder({ label }: {
-    label: string,
-}) {
+function PlaceHolder() {
 
-    const translations = useTranslation()
 
 
     return <div
         className="">
-        <div className="flex justify-between">
-            <b className="text-blue-800">
-                {translations[label]}
-            </b>
-        </div>
         <div className="shadow-xl divide-y p-2 rounded-lg">
             {(Array.from(Array(8).keys()))?.map(e => (
                 (

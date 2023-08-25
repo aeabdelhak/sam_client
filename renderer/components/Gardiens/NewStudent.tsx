@@ -3,15 +3,18 @@ import { useAppContext } from "../Context/AppContext";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
+import { useTranslation } from "../../utils/translations/Context";
+import ModalCloser from "../Ui/ModalCloser";
 
 export default function NewStudent({ guardianId }: { guardianId: string }) {
     const { close } = useModal()
-    const [pending,setLoading]=useState(false)
+    const [pending, setLoading] = useState(false)
     const { students: {
         newStudent
     }, classes: {
         data
     } } = useAppContext()
+    const translations = useTranslation()
 
     const save: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault()
@@ -27,39 +30,42 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
     return (
         <form onSubmit={save} className="p-6 space-y-3">
             <div className="space-y-2">
-                <h1 className="font-semibold text-2xl">
-                    add a stuent
-                </h1>
+                <div className="flex justify-between items-center">
+                    <h1 className="font-semibold text-2xl">
+                        {translations.addAStudent}
+                    </h1>
+                    <ModalCloser />
+                </div>
                 <p className="text-sm text-gray-500">
-                    fill the form bellow to create a new student
+                    {translations.addAStudentDesc}
                 </p>
             </div>
             <div className="flex flex-col gap-2">
                 <label>
                     <p className="text-sm font-bold">
-                        first name
+                        {translations.firstName}
                     </p>
                     <Input
                         required
                         name="firstName"
                         disabled={pending}
-                        placeholder="student first name"
+                        placeholder={translations.firstName}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        last name
+                        {translations.lastName}
                     </p>
                     <Input
                         required
                         name="lastName"
                         disabled={pending}
-                        placeholder="student last name"
+                        placeholder={translations.lastName}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        image
+                        {translations.image}
                     </p>
                     <Input
                         required
@@ -67,12 +73,12 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                         type="file"
                         accept="image/*"
                         disabled={pending}
-                        placeholder="student image"
+                        placeholder={translations.image}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        class
+                        {translations.class}
                     </p>
                     <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">
 
@@ -90,17 +96,12 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                 </label>
             </div>
             <div className="flex justify-end gap-2">
-                <Button
-                    onClick={close}
-                    disabled={pending}
-                    className="!text-gray-700 tracking-wide text-sm active:bg-gray-200 bg-gray-100 px-4 py-2 rounded-lg">
-                    close
-                </Button>
+
                 <Button
                     disabled={pending}
                     type="submit"
                     className="bg-blue-700 tracking-wide text-sm text-white px-4 py-2 rounded-lg">
-                    Create
+                    {translations.addAStudent}
                 </Button>
             </div>
         </form>

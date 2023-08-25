@@ -1,12 +1,14 @@
 import { CloseSquare } from "react-iconly";
-import { Class, User, useAppContext } from "../Context/AppContext";
+import { Class, useAppContext } from "../Context/AppContext";
 import { useModal } from "../Ui/Modal";
 import Button from "../Ui/button/Button";
 import { useState } from "react";
 import { LoaderIcon } from "react-hot-toast";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function DeleteClass(data: Class) {
     const [loading, setloading] = useState(false)
+    const translations=useTranslation()
     const { close } = useModal()
     const {
         classes: {
@@ -14,10 +16,10 @@ export default function DeleteClass(data: Class) {
         }
     } = useAppContext()
     return (
-        <div className={" z-0 p-6 bg-gradient-to-br bg-white flex flex-col  rounded-lg  "}>
+        <div className={" z-0 space-y-4 p-6 bg-gradient-to-br bg-white flex flex-col  rounded-lg  "}>
             <div className="flex justify-between">
                 <h1 className="text-xl ">
-                    Delete <b className="text-blue-900">
+                    {translations.delete} <b className="text-blue-900">
                         {data.label}
                     </b>
 
@@ -31,10 +33,10 @@ export default function DeleteClass(data: Class) {
                 </button>
             </div>
             <p className="text-xs text-red-600">
-                all students within this class will be deleted
+                {translations.deleteClassDangerMsg}
             </p>
             <p className="text-sm">
-                are you sure you want to delete this class ?
+                {translations.deleteClassAsk}
             </p>
             <div className="flex justify-end">
                 <Button
@@ -47,7 +49,7 @@ export default function DeleteClass(data: Class) {
                     }}>
                     {
                         loading ? <LoaderIcon /> :
-                            "delete"
+                            translations.delete
                     }
 
                 </Button>

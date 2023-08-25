@@ -1,30 +1,20 @@
-import { ipcRenderer } from "electron";
-import { Logout, VolumeOff, VolumeUp } from "react-iconly";
 import NavArrows from "./Ui/button/back";
 import { useAppContext } from "./Context/AppContext";
-import { useEffect, useState } from "react";
-import audioNotif from "../utils/ring";
+
+import { useAppTitle } from "./Context/TitleConext";
+import { useSession } from "./Context/SessionConext";
 
 export default function Navbar() {
-    const [muted, setmuted] = useState(audioNotif.muted)
-    const { title, user } = useAppContext()
-    const [curreTime, setcurreTime] = useState<Date>(new Date())
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setcurreTime(new Date())
-        }, 1000)
-        return () => {
-            clearInterval(interval)
-        }
-    }, [])
+    const { title}=useAppTitle()
+    const {  user } = useSession()
+   
 
 
     return (
-        <div className="  sticky top-0 bg-white z-20 ">
-            <div className="flex ml-24  mx-auto p-4 items-center container">
+        <div className=" ltr:ml-32 rtl:mr-32 mt-4 top-4 sticky   bg-white z-20 ">
+            
+            <div className="flex   mx-auto p-4 items-center container">
                 <div className="flex-1 flex items-center">
-                    <NavArrows />
                     <div className="">
                         <h1 className="font-semibold capitalize text-lg tracking-wide text-gray-600">
                             {title}
@@ -33,23 +23,6 @@ export default function Navbar() {
                 </div>
                 <div className=" grid   overflow-hidden ">
                     <div className="flex w-full space-x-2 items-center">
-                        <div className=" flex-1 ">
-                            <p className=" text-xs l w-full ">
-                                {curreTime?.toLocaleTimeString("fr", {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    second: "2-digit"
-                                })}
-                            </p>
-                        </div>
-                        <button
-                            onClick={() => setmuted(e => {
-                                !e ? audioNotif.mute() : audioNotif.unmute()
-                                return !e
-                            })}
-                            className="  w-6 h-6 text-xs  rounded-full flex justify-center items-center">
-                            {!muted ? <VolumeUp size={"small"} /> : <VolumeOff size={"small"} />}
-                        </button>
                         <div className=" uppercase bg-blue-700 text-white w-6 h-6 text-xs  rounded-full flex justify-center items-center">
                             {user?.name?.charAt(0)}
                         </div>
@@ -58,12 +31,11 @@ export default function Navbar() {
                                 {user?.name}
                             </p>
                         </div>
-                        <div className="flex">
 
-                        </div>
                     </div>
 
                 </div>
-            </div></div>
+            </div>
+        </div>
     )
 }

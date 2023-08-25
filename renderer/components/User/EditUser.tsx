@@ -1,16 +1,20 @@
 import { FormEventHandler, useState, useTransition } from "react";
-import { Roles, User, useAppContext } from "../Context/AppContext";
+import {  useAppContext } from "../Context/AppContext";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
 import { AnimatePresence, motion } from "framer-motion";
 import ModalCloser from "../Ui/ModalCloser";
+import { Roles, User, useSession } from "../Context/SessionConext";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function EditUser(data: User) {
     const { close } = useModal()
     const [showPass, setshowPass] = useState(false)
     const [pending, setPending] = useState(false)
-    const { user, users: {
+    const { user } = useSession()
+    const translations=useTranslation()
+    const {  users: {
         updateUserData,
         updatePassword
 
@@ -50,12 +54,12 @@ export default function EditUser(data: User) {
                 <div className="flex justify-between">
 
                 <h1 className="font-semibold text-xl">
-                    new user
+                    {translations.editUser}
                     </h1>
                     <ModalCloser/>
                 </div>
                 <p className="text-xs text-gray-500">
-                    fill the form bellow to create a new user
+                    {translations.editTheUserDesc}
                 </p>
             </div>
             <div className="relative grid grid-cols-2 p-2 rounded-md bg-slate-100">
@@ -64,13 +68,13 @@ export default function EditUser(data: User) {
                     disabled={!showPass}
                     onClick={e => setshowPass(false)}
                     className="disabled:bg-blue-700 disabled:!text-white bg-transparent !text-gray-500">
-                    informations
+                    {translations.informations}
                 </Button>
                 <Button
                     disabled={showPass}
                     onClick={e => setshowPass(true)}
                     className="disabled:bg-blue-700 disabled:!text-white bg-transparent !text-gray-500">
-                    password
+                    {translations.password}
                 </Button>
             </div>
             <AnimatePresence
@@ -93,33 +97,33 @@ export default function EditUser(data: User) {
                                 <div className="flex flex-col gap-2">
                                     <label>
                                         <p className="text-sm font-bold">
-                                            name
+                                            {translations.name}
                                         </p>
                                         <Input
                                             required
                                             defaultValue={data.name}
                                             name="name"
                                             disabled={pending}
-                                            placeholder="name"
+                                            placeholder={translations.name}
                                         />
                                     </label>
                                     <label>
                                         <p className="text-sm font-bold">
-                                            username
+                                            {translations.username}
                                         </p>
                                         <Input
                                             required
                                             defaultValue={data.username}
                                             name="username"
                                             disabled={pending}
-                                            placeholder="username"
+                                            placeholder={translations.username}
                                         />
                                     </label>
                                     {
                                         user.role == Roles.SuperUser &&
                                         <label>
                                             <p className="text-sm font-bold">
-                                                role
+                                                {translations.role}
                                             </p>
                                             <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">
                                                 <select
@@ -128,10 +132,10 @@ export default function EditUser(data: User) {
                                                     className="appearance-none flex-1 focus:text-gray-900 text-gray-500 outline-none w-full bg-transparent px-2 py-2 text-sm "
                                                     name="role" id="">
                                                     <option value="ClassTeacher">
-                                                        Class teacher
+                                                        {translations.classTeacher}
                                                     </option>
                                                     <option value="Administrator">
-                                                        Administrator
+                                                        {translations.administrator}
                                                     </option>
 
                                                 </select>
@@ -142,7 +146,7 @@ export default function EditUser(data: User) {
                                     <Button
                                         disabled={pending}
                                         type="submit">
-                                        save
+                                        {translations.save}
                                     </Button>
                                 </div>
                             </form>
@@ -163,21 +167,21 @@ export default function EditUser(data: User) {
 
                                 <label>
                                     <p className="text-sm font-bold">
-                                        password
+                                        {translations.password}
                                     </p>
                                     <Input
                                         required
                                         type="password"
                                         name="password"
                                         disabled={pending}
-                                        placeholder="password"
+                                        placeholder={translations.password}
                                     />
                                 </label>
                                 <div className="flex justify-end gap-2">
                                     <Button
                                         disabled={pending}
                                         type="submit">
-                                        change password
+                                        {translations.save}
                                     </Button>
                                 </div>
                             </form>

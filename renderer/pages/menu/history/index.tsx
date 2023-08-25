@@ -6,6 +6,7 @@ import Button from "../../../components/Ui/button/Button";
 import { Search } from "react-iconly";
 import { LoaderIcon } from "react-hot-toast";
 import { config } from "../../../utils/fetch";
+import { useTranslation } from "../../../utils/translations/Context";
 const weekdays = [
     "Sunday",
     "Monday",
@@ -17,6 +18,7 @@ const weekdays = [
 ]
 
 export default function Index() {
+    const translations=useTranslation()
     const [selectedClass, setSelectedClass] = useState<string>()
     const [isgetting, start] = useState(false)
     const [history, sethistory] = useState<PresenceHistory>()
@@ -67,10 +69,10 @@ export default function Index() {
             />
             <div className="flex mb-6 flex-col gap-4">
                 <h1 className="font-semibold text-3xl">
-                    Presence History
+                    {translations.presenceHistory}
                 </h1>
                 <p className="text-xs">
-                    manage students attendance history
+                    {translations.presenceHistoryDesc}
                 </p>
             </div>
 
@@ -115,7 +117,7 @@ export default function Index() {
                         name="from"
                         defaultValue={formatDate()}
                         type="date"
-                        placeholder="start time"
+                        placeholder={translations.startsAt}
                     />
                 </div>
                 <div className="   grow" >
@@ -124,7 +126,7 @@ export default function Index() {
                         name="to"
                         defaultValue={formatDate()}
                         type="date"
-                        placeholder="end time"
+                        placeholder={translations.endsAt}
                     />
                 </div>
                 <div className="flex justify-center items-center">
@@ -200,7 +202,7 @@ export default function Index() {
               !isgetting &&  history?.presence?.map(e => (
                     <div key={e.date?.toString()} className="p-4 my-1 bg-slate-100 rounded-lg ">
                         <h1 className="font-bold uppercase text-blue-800">
-                            {weekdays[new Date(e.date).getDay()]} {new Date(e.date).toLocaleDateString('fr')}
+                            {translations[weekdays[new Date(e.date).getDay()]]} {new Date(e.date).toLocaleDateString('fr')}
                         </h1>
                        {e.data.length > 0 ? <div className="bg-white p-2 rounded-lg mt-2">
 
@@ -239,7 +241,7 @@ export default function Index() {
                             ))}
                       </div> : 
                           <p className="text-xs text-gray-700">
-                              no data 
+                              {translations.noData} 
                         </p>
                         }
 

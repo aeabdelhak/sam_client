@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import Modal from "../Ui/Modal";
 import Button from "../Ui/button/Button";
 import { config } from "../../utils/fetch";
-import { StudentsEntity } from "../../types/class";
-import { useAppContext } from "../Context/AppContext";
+import { StudentsEntity, useAppContext } from "../Context/AppContext";
 import { CloseSquare } from "react-iconly";
 
 export default function Student({ student, requested }: { requested: boolean, student: StudentsEntity }) {

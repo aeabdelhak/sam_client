@@ -1,0 +1,7 @@
+{ 
+	"translations":{
+		"scope": "javascript,typescript",
+		"prefix": "utrs",
+		"body": "const translations=useTranslations()"
+	}
+}

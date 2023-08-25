@@ -5,8 +5,10 @@ import Modal from "../../../components/Ui/Modal";
 import NewUser from "../../../components/User/newUser";
 import Button from "../../../components/Ui/button/Button";
 import UserData from "../../../components/User/User";
+import { useTranslation } from "../../../utils/translations/Context";
 
 export default function Access() {
+    const translations = useTranslation()
     const [openNew, setopenNew] = useState(false)
     const { users: {
         loading, error, data, getData
@@ -28,22 +30,22 @@ export default function Access() {
             />
             <div className="flex mb-6 flex-col gap-4">
                 <h1 className="font-semibold text-3xl">
-                    Users manager
+                    {translations.userManager}
                 </h1>
                 <p className="text-xs">
-                    manage application accesses
+                    {translations.userManagerDesc}
                 </p>
             </div>
             <div className="grid gap-4 grid-cols-3">
                 <div className="col-span-2 rounded-lg bg-slate-50 p-6">
                     <div className="flex justify-between pb-6">
                         <h1 className="font-semibold text-xl">
-                            Users
+                            {translations.users}
                         </h1>
                         <div className="">
                             <Button
                                 onClick={() => setopenNew(true)}
-                            >                                new user
+                            >                                {translations.newUser}
                             </Button>
                         </div>
                     </div>

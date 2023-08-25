@@ -18,7 +18,7 @@ let mainWindow: BrowserWindow
   mainWindow = createWindow('main', {
     width: 400,
     height: 450,
-    frame: true,
+    frame: false,
     resizable: false,
     autoHideMenuBar: true,
     titleBarStyle: "default",
@@ -47,6 +47,20 @@ ipcMain.on("loginSuccess", () => {
 ipcMain.on("remoteLockUp", async (event) => {
   const connected = await getConnectedIPAddresses()
   event.returnValue = connected;
+})
+ipcMain.on("minimizeApp", async (event) => {
+  mainWindow.minimize();
+  ;
+})
+ipcMain.on("closeApp", async (event) => {
+  app.quit();
+  ;
+})
+ipcMain.on("maximizeApp", async (event) => {
+  isMacOS ? mainWindow.fullScreen = !mainWindow.isFullScreen() : mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
+})
+ipcMain.on("maximizeAppOnly", async (event) => {
+  mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
 })
 ipcMain.on("logoutSuccess", async () => {
   if (isProd) {
@@ -101,7 +115,7 @@ app.on('window-all-closed', () => {
 async function getConnectedIPAddresses() {
   if (isMacOS)
     return (await find()).map(e => e.ip);
-    return await getConnectedDevices();
+  return await getConnectedDevices();
 }
 
 async function resize({ width, height }: { width, height }) {

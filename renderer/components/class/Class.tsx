@@ -14,7 +14,7 @@ export default function TheClass(data: Class) {
         <div
 
             key={data.id}
-            className="flex w-full group transition-all disabled:bg-blue-700  items-center disabled:text-white space-x-2 p-4 bg-white rounded-md border">
+            className="flex w-full group transition-all disabled:bg-blue-700  items-center disabled:text-white space-x-2 p-2 bg-white hover:bg-gray-100 ">
               <Modal handler={setshowDelete} shown={showDelete}>
               <DeleteClass
               {...data}
@@ -26,8 +26,7 @@ export default function TheClass(data: Class) {
               />
           </Modal>
             
-            <div className="bg-blue-800 flex  text-white rounded-full w-8 h-8  justify-center items-center">
-            </div>
+            
             <div className="flex flex-1 items-start space-y-1 flex-col">
                 <p className="text-sm ">
                     {data.label}

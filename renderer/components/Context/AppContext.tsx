@@ -2,11 +2,10 @@ import { useContext, createContext, useState, Dispatch, SetStateAction, ReactNod
 import fetchApi from "../../utils/fetch";
 import { toast } from "react-hot-toast";
 import { convertBlobToBase64 } from "../../utils/fileToBase64";
-export enum Roles {
-    Administrator = "Administrator",
-    ClassTeacher = "ClassTeacher",
-    SuperUser = "SuperUser"
-}
+import { AttendanceEntity } from "../../types/class";
+import { Roles, User } from "./SessionConext";
+import { useTranslation } from "../../utils/translations/Context";
+
 export interface guardian {
     id: string;
     cardId: string;
@@ -31,6 +30,7 @@ export interface StudentsEntity {
     fileId?: null;
     Class: Class;
     Image?: File;
+    Attendances?: AttendanceEntity[]
 
 }
 type studentState = {
@@ -65,10 +65,29 @@ type upsertscheduleType = {
         subjectLabel: string
     }[]
 }
+type upsertVacanceType = {
+    id?: string
+    startDate: Date,
+    endDate: Date,
+    label: string
+}
+
+export type Vacancy = {
+    id: string
+    startDate: Date,
+    endDate: Date,
+    label: string
+}
 type ScheduleState = {
     data: Map<string, ScheduleMap>
     getSchedule: (id: string) => Promise<ScheduleState['data']>
     upsertschedule: (props: upsertscheduleType) => Promise<boolean>
+}
+type VacanceState = {
+    data: Vacancy[],
+    loading: boolean,
+    getVacances: () => Promise<void>
+    upsertVacances: (props: upsertVacanceType[]) => Promise<boolean>
 }
 type DismissionRequests = Map<string, Set<string>>
 type attendance = {
@@ -76,6 +95,7 @@ type attendance = {
     rejectRequest: (classId: string, studentId: string) => void,
     appendRequest: (classId: string, studentId: string) => void,
     dismiss: (classId: string, studentId: string) => Promise<boolean>,
+    dismissClass: (classId: string) => Promise<boolean>,
 }
 
 export interface Class {
@@ -111,6 +131,8 @@ type classState = {
     error: boolean,
     data: Class[],
     getData: () => Promise<void>,
+    classes: Map<string, Class>
+    getClass: (id: string) => Promise<void>,
     getPresenceHistory: (id: string, from: Date, to: Date) => Promise<PresenceHistory>,
     updateClass: (p: { classId: string, label: string }) => Promise<boolean>
     deleteClass: (p: { classId: string }) => Promise<boolean>
@@ -138,21 +160,10 @@ type userState = {
     data: User[],
     getData: () => Promise<void>,
 }
-export type User = {
-    id: string;
-    name: string;
-    username: string;
-    passwordHash: string;
-    passwordSalt: string;
-    role: Roles;
-    fileId: string | null;
-}
+
 type state = {
     title: string,
-    user?: User,
     users: userState,
-    getAuthUser: () => Promise<void>
-    setUser: Dispatch<SetStateAction<User>>,
     setTitle: Dispatch<SetStateAction<string>>,
     guardians: guardianState,
     classes: classState,
@@ -160,17 +171,16 @@ type state = {
     attendance: attendance,
     scheduls: ScheduleState,
     remoteServer: string,
-    setremoteServer:Dispatch<SetStateAction<string>>,
+    vacances: VacanceState
+    setremoteServer: Dispatch<SetStateAction<string>>,
 
 }
 
 const Context = createContext<state>({
     title: "",
     remoteServer: "",
-    setremoteServer:()=>{},
+    setremoteServer: () => { },
     setTitle: null as never,
-    setUser: null as never,
-    getAuthUser: null as never,
     guardians: {
         data: [],
         deleteGuardian: null as never,
@@ -183,6 +193,8 @@ const Context = createContext<state>({
     },
     classes: {
         data: [],
+        classes: new Map,
+        getClass: null as never,
         deleteClass: null as never,
         getData: null as never,
         error: false,
@@ -197,8 +209,13 @@ const Context = createContext<state>({
         newStudent: null as never,
         updateStudent: null as never
     },
+    vacances: {
+        data: [],
+        loading: true,
+        getVacances: async () => { },
+        upsertVacances: null as never
+    },
     users: {
-
         data: [],
         deleteUser: null as never,
         error: false,
@@ -208,7 +225,6 @@ const Context = createContext<state>({
         refreshing: false,
         updatePassword: null as never,
         updateUserData: null as never,
-
     },
     scheduls: {
         data: new Map(),
@@ -222,16 +238,21 @@ const Context = createContext<state>({
         rejectRequest: () => { },
         appendRequest: () => { },
         dismiss: async () => false,
+        dismissClass: async () => false,
     }
 })
 
 export const useAppContext = () => useContext(Context);
 export default function AppContext({ children }: { children: ReactNode }) {
+    const translations=useTranslation()
     const [classes, setclasses] = useState<classState>()
     const [dismissReqs, setdismissReqs] = useState<DismissionRequests>(new Map())
     const [users, setusers] = useState<userState>()
     const [guardian, setguardian] = useState<guardianState>()
     const [schedules, setschedules] = useState<ScheduleState['data']>(new Map())
+    const [classesData, setclassesData] = useState<Map<string, Class>>(new Map());
+    const [vacances, setvacances] = useState<Vacancy[]>()
+    const [loadingvacances, setloadingvacances] = useState<boolean>(false)
     const [user, setUser] = useState<User>()
     const [title, setTitle] = useState("")
     const [remoteServer, setremoteServer] = useState("")
@@ -289,25 +310,19 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res.success) {
                 await getUsers();
-                toast.success("new user created successfuly")
+                toast.success(translations.newUserSuccess)
                 return true;
             }
-            if (res.exist) toast.error("a user with same username already exists")
+            if (res.exist) toast.error(translations.newUserExist)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
     }
-    async function getAuthUser() {
-
-        const data = await fetchApi("/auth/user")
-        if(data) setUser(data)
-
-
-    }
+ 
     async function newClass(params: { label: string }) {
         type response = {
             exist: boolean,
@@ -325,14 +340,14 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res.classId) {
                 await getClasses();
-                toast.success("new class created successfuly")
+                toast.success(translations.newClassSuccess)
                 return true;
             }
-            if (res.exist) toast.error("a class with same name already exists")
+            if (res.exist) toast.error(translations.newClassExist)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
@@ -373,14 +388,14 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res.guardianId) {
                 await getguardians();
-                toast.success("new gariden created successfuly")
+                toast.success(translations.newClassSuccess)
                 return true;
             }
-            if (res.exist) toast.error("a guardian with same cardId already exists")
+            if (res.exist) toast.error(translations.newGuardianExist)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
@@ -409,20 +424,20 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res.studentId) {
                 await getguardians();
-                toast.success("new student created successfuly")
+                toast.success(translations.newStudentSuccess)
                 return true;
             }
-            if (res.exist) toast.error("a student with same cardId already exists")
+            if (res.exist) toast.error(translations.newStudentExist)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
     }
     async function updateStudent(params: FormData) {
-        
+
         const studentId = params.get("studentId") as string
         const firstName = params.get("firstName") as string
         const lastName = params.get("lastName") as string
@@ -445,14 +460,14 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res.success) {
                 await getguardians();
-                toast.success(" student data updated successfuly")
+                toast.success(translations.newGuardianSuccess)
                 return true;
             }
-            if (res.exist) toast.error("something went wrong")
+            if (res.exist) toast.error(translations.newGuardianExist)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
@@ -465,14 +480,14 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res) {
                 await getguardians();
-                toast.success(" student deleted successfuly")
+                toast.success(translations.deleteStudentSuccess)
                 return true;
             }
-            toast.error("something went wrong")
+            toast.error(translations.errorMsg)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
@@ -485,14 +500,14 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             if (res) {
                 await getUsers();
-                toast.success(" user deleted successfuly")
+                toast.success(translations.deleteUserSuccess)
                 return true;
             }
-            toast.error("something went wrong")
+            toast.error(translations.errorMsg)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
             return false;
         }
     }
@@ -505,14 +520,14 @@ export default function AppContext({ children }: { children: ReactNode }) {
             await getguardians();
             await getClasses();
             if (res.success) {
-                toast.success(" guardian deleted successfuly")
+                toast.success(translations.deleteGuardianSuccess)
                 return true;
             }
-            toast.error("something went wrong")
+            toast.error(translations.errorMsg)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
             return false;
         }
     }
@@ -537,15 +552,15 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 }
             })
             if (res) {
-                toast.success(" user password updated successfuly")
+                toast.success(translations.updateUserPasswordSuccess)
                 return true;
             }
-            toast.error("something went wrong")
+            toast.error(translations.errorMsg)
             return false;
 
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
             return false;
 
         }
@@ -562,21 +577,21 @@ export default function AppContext({ children }: { children: ReactNode }) {
             })
             await getUsers();
             if (res.success) {
-                toast.success(" user data updated successfuly")
+                toast.success(translations.updateUserDataSuccess)
                 return true;
             }
             if (res.notFound) {
-                toast.error("unable to find a user with that id")
+                toast.error(translations.UserNotFound)
                 return false;
             }
             if (res.exist) {
-                toast.error("another user with same username exists")
+                toast.error(translations.newUserExist)
                 return false;
             }
 
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
             return false;
 
         }
@@ -599,15 +614,15 @@ export default function AppContext({ children }: { children: ReactNode }) {
                     map.set(classId, students)
                     return map;
                 })
-                toast(" student dissmised successfuly")
+                toast(translations.studentDismissSuccess)
                 return true;
             }
-            toast.error("something went wrong")
+            toast.error(translations.errorMsg)
             return false;
 
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
             return false;
 
         }
@@ -635,18 +650,49 @@ export default function AppContext({ children }: { children: ReactNode }) {
             if (res.success) {
                 await getClasses();
                 getguardians();
-                toast.success(" class label updated successfuly")
+                toast.success(translations.classUpdatedSuccess)
                 return true;
             }
-            if (res.exist) toast.error("another class with same label exists")
+            if (res.exist) toast.error(translations.newClassExist)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
     }
+
+    async function getClass(id: string) {
+        try {
+            const data = new Map(classesData)
+            const getData = await fetchApi('/get/class/' + id)
+            data.set(id, getData)
+            setclassesData(data)
+        } catch (error) {
+            toast.error("")
+        }
+    }
+    async function dismissClass(id: string) {
+        try {
+            const res = await fetchApi('/attendance/dismissall/' + id, {
+                method:"POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            if (res) {
+                toast.success(translations.allDismissed)
+                await getClass(id)
+                return true
+            }
+            toast.error("")
+        } catch (error) {
+            toast.error("")
+            return false
+        }
+    }
+
     async function deleteClass({ classId }: { classId: string }) {
 
         try {
@@ -656,13 +702,13 @@ export default function AppContext({ children }: { children: ReactNode }) {
             if (res.success) {
                 getguardians();
                 await getClasses();
-                toast.success(" class deleted successfuly")
+                toast.success(translations.deleteClassSuccess)
                 return true;
             }
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
             return false;
         }
     }
@@ -680,19 +726,19 @@ export default function AppContext({ children }: { children: ReactNode }) {
             await getClasses();
 
             if (res.success) {
-                toast.success(" guardian data updated successfuly")
+                toast.success(translations.updateGuardianSuccess)
                 return true;
             }
             if (res.notFound) {
 
-                toast.success(" unable to find the desired guardian ")
+                toast.success(translations.guardianNotFound)
                 return true;
             }
-            if (res.exist) toast.error("another class with same label exists")
+            if (res.exist) toast.error(translations.newGuardianExist)
             return false;
 
         } catch (error) {
-            toast.error("somethong went wrong ,try again")
+            toast.error(translations.errorMsg)
 
             return false;
         }
@@ -753,6 +799,28 @@ export default function AppContext({ children }: { children: ReactNode }) {
 
 
     }
+    async function upsertVacances(params: upsertVacanceType[]) {
+        try {
+            const res = await fetchApi("/upsert/vacances", {
+                method: "POST",
+                body: JSON.stringify(params),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            if (res.success) {
+                toast.success(translations.vacancesupdatedsuccess)
+                await getVacances()
+                return true
+            }
+        }
+        catch {
+
+        }
+        return false
+
+
+    }
     async function getPresenceHistory(id: string, from: Date, to: Date) {
 
         try {
@@ -774,15 +842,38 @@ export default function AppContext({ children }: { children: ReactNode }) {
 
     }
 
+    async function getVacances() {
+        if (loadingvacances) return
+        setloadingvacances(true);
+        try {
+
+            const data = (await fetchApi("/get/vacances"))
+            if (data)
+                setvacances((data as Vacancy[]).map(e => ({
+                    ...e,
+                    endDate: new Date(e.endDate),
+                    startDate: new Date(e.startDate)
+                })))
+        } catch (error) {
+
+
+        }
+        setloadingvacances(false);
+
+    }
+
     return (
         <Context.Provider value={{
             title,
             setTitle,
             setremoteServer,
             remoteServer,
-            getAuthUser,
-            user,
-            setUser,
+            vacances: {
+                getVacances,
+                data: vacances,
+                loading: loadingvacances,
+                upsertVacances
+            },
             guardians: {
                 ...guardian,
                 getData: getguardians,
@@ -793,6 +884,8 @@ export default function AppContext({ children }: { children: ReactNode }) {
             },
             classes: {
                 ...classes,
+                classes: classesData,
+                getClass,
                 getData: getClasses,
                 newClass,
                 updateClass,
@@ -808,7 +901,8 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 dismissionRequests: dismissReqs,
                 appendRequest,
                 dismiss,
-                rejectRequest
+                rejectRequest,
+                dismissClass
             },
             users: {
                 ...users,

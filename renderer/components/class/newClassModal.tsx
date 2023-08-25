@@ -14,9 +14,11 @@ import Button from "../Ui/button/Button";
 import { useAppContext } from "../Context/AppContext";
 import { useModal } from "../Ui/Modal";
 import ModalCloser from "../Ui/ModalCloser";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function NewClass() {
     const { close } = useModal()
+    const translations=useTranslation()
     const [loading, startTransition] = useTransition()
     const { classes: {
         newClass
@@ -37,18 +39,18 @@ export default function NewClass() {
 
                 <div className="flex justify-between">
                     <h1 className="font-semibold text-xl">
-                        new class    </h1>
+                        {translations.createAClass}    </h1>
                     <ModalCloser />
                 </div>
                 <p className="text-xs text-gray-500">
-                    fill the form bellow to create a new class
+                    {translations.newClassDesc}
                 </p>
             </div>
             <div className="text-gray-400 flex flex-col  space-y-2 w-full pt-4 ">
                 <Input
                     disabled={loading}
                     name="label"
-                    placeholder="label"
+                    placeholder={translations.name}
                     type="text"
                     icon={<InfoCircle size={"small"} />} />
 
@@ -56,7 +58,7 @@ export default function NewClass() {
                     disabled={loading}
                     type="submit"
                     className="self-end rounded">
-                    {loading && <LoaderIcon />} create
+                    {loading && <LoaderIcon />} {translations.createAClass}
                 </Button>
             </div>
         </form>

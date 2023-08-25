@@ -6,11 +6,11 @@ import Sidebar from "./Sidebar"
 import { useRouter } from "next/router"
 import { AnimatePresence, motion } from "framer-motion"
 import { ipcRenderer } from "electron"
+import { useSession } from "./Context/SessionConext"
 
 export default function Layout({ children }: { children: ReactNode }) {
-    const {
-        user,
-        getAuthUser, classes: {
+    const {user,getAuthUser}=useSession()
+    const { classes: {
             getData,
         } } = useAppContext()
     const router = useRouter();
@@ -41,21 +41,20 @@ export default function Layout({ children }: { children: ReactNode }) {
 
 
 
-    if (loading) return <div className="w-screen  h-screen  flex">
+    if (loading) return <div className="w-screen pt-10  h-screen  flex">
         <div className="m-auto scale-150">
             <LoaderIcon />
         </div>
     </div>
 
     return (
-        <div className=" flex  flex-1  h-full ">
+        <div className=" flex pt-10  flex-1  h-full ">
             <Sidebar />
-            <AnimatePresence
-                mode="popLayout"
+            <
             >
-                <motion.div
+                <div
                     key={router.pathname}
-                    transition={{
+                /*     transition={{
                         duration: 0.5
                     }}
                     animate={{
@@ -79,11 +78,11 @@ export default function Layout({ children }: { children: ReactNode }) {
                         filter: "blur(1.5rem)"
 
 
-                    }}
-                    className="   h-full ml-24 flex-1 flex flex-col ">
+                    }} */
+                    className="   h-full ltr:ml-36 rtl:mr-36 flex-1 flex flex-col ">
                     {children}
-                </motion.div>
-            </AnimatePresence>
+                </div>
+            </>
         </div>
 
     )

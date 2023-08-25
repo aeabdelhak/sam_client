@@ -6,10 +6,12 @@ import { useAppContext } from "../../../components/Context/AppContext";
 import Button from "../../../components/Ui/button/Button";
 import Router from "next/router";
 import Guardians from "../../../components/Gardiens/Guardian";
+import { useTranslation } from "../../../utils/translations/Context";
 
 
 
 export default function Page() {
+    const translations=useTranslation()
     const { classes: {
         data: classes,
         getData: getClasses,
@@ -31,7 +33,7 @@ export default function Page() {
     return (
         <>
             <Title
-                title="guardians and students"
+                title={translations.guarndiansAndStudents}
             />
 
             {(!classes && loadingClasses) ?

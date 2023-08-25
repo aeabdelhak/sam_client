@@ -1,6 +1,7 @@
 import Router from "next/router"
 import { toast } from "react-hot-toast"
 import { Image } from "../types/class"
+import { translation } from "./translations/Context"
 
 type props = Parameters<typeof fetch>
 export class config {
@@ -33,13 +34,15 @@ export default async function fetchApi(...props: props) {
         })
         if (res.status == 401) {
             localStorage.clear()
-            toast.error("session timeout ")
+            toast.error(translation.getCurrent().sessionTimeOut)
             return Router.replace("/home")
         }
-        if (res.status == 200)
+        else if (res.status == 200)
             return await res.json()
+        else
+            toast(translation.getCurrent().errorMsg)
     } catch (error) {
-        toast(error.status)
+        toast(translation.getCurrent().errorMsg)
         return {}
     }
 

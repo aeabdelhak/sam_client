@@ -1,14 +1,18 @@
 import { FormEventHandler, useTransition } from "react";
-import { Roles, useAppContext } from "../Context/AppContext";
+import {  useAppContext } from "../Context/AppContext";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
 import ModalCloser from "../Ui/ModalCloser";
+import { Roles, useSession } from "../Context/SessionConext";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function NewUser() {
     const { close } = useModal()
     const [pending, start] = useTransition()
-    const { user, users: {
+    const translations=useTranslation()
+    const {user}=useSession()
+    const {  users: {
         newUser,
 
     }, classes: {
@@ -37,51 +41,51 @@ export default function NewUser() {
                 <div className="flex justify-between">
 
                 <h1 className="font-semibold text-xl">
-                    new user
+                    {translations.newUser}
                     </h1>
                     <ModalCloser/>
                 </div>
                 <p className="text-xs text-gray-500">
-                    fill the form bellow to create a new user
+                    {translations.newUserDsc}
                 </p>
             </div>
             <div className="flex flex-col gap-2">
                 <label>
                     <p className="text-sm font-bold">
-                        name
+                        {translations.name}
                     </p>
                     <Input
                         name="name"
                         disabled={pending}
-                        placeholder="name"
+                        placeholder={translations.password}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        username
+                        {translations.username}
                     </p>
                     <Input
                         name="username"
                         disabled={pending}
-                        placeholder="username"
+                        placeholder={translations.username}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        password
+                        {translations.password}
                     </p>
                     <Input
                         type="password"
                         name="password"
                         disabled={pending}
-                        placeholder="password"
+                        placeholder={translations.password}
                     />
                 </label>
                 {
                     user.role == Roles.SuperUser &&
                     <label>
                         <p className="text-sm font-bold">
-                            role
+                            {translations.role}
                         </p>
                         <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">
 
@@ -89,10 +93,10 @@ export default function NewUser() {
                                 className="appearance-none flex-1 focus:text-gray-900 text-gray-500 outline-none w-full bg-transparent px-2 py-2 text-sm "
                                 name="role" id="">
                                 <option value="ClassTeacher">
-                                Class teacher
+                                {translations.classTeacher}
                                 </option>
                                 <option value="Administrator">
-                                    Administrator
+                                    {translations.administrator}
                                 </option>
 
                             </select>
@@ -101,15 +105,9 @@ export default function NewUser() {
             </div>
             <div className="flex justify-end gap-2">
                 <Button
-                    onClick={close}
-                    disabled={pending}
-                    className="!text-gray-700 bg-gray-100 ">
-                    close
-                </Button>
-                <Button
                     disabled={pending}
                     type="submit">
-                    Create
+                    {translations.newUser}
                 </Button>
             </div>
         </form>

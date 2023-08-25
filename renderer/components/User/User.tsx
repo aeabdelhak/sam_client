@@ -1,11 +1,13 @@
 import { Delete, Edit } from "react-iconly";
-import { User } from "../Context/AppContext";
 import Modal from "../Ui/Modal";
 import { useState } from "react";
 import DeleteUser from "./DeleteUser";
 import EditUser from "./EditUser";
+import { User } from "../Context/SessionConext";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function UserData(data: User) {
+    const translations=useTranslation()
     const [showDelete, setshowDelete] = useState(false)
     const [showEdit, setshowEdit] = useState(false)
   return (
@@ -21,7 +23,7 @@ export default function UserData(data: User) {
               {...data}
               />
           </Modal>
-    <a className="flex w-full group transition-all disabled:bg-blue-700  items-center  disabled:text-white space-x-2 p-4 bg-white rounded-md hover:outline outline-gray-200">
+    <a className="flex w-full group transition-all disabled:bg-blue-700  items-center  disabled:text-white gap-2 p-4 bg-white rounded-md hover:outline outline-gray-200">
         <div className=" uppercase bg-blue-700 text-white w-6 h-6 text-xs  rounded-full flex justify-center items-center">
             {data.name?.charAt(0)}
         </div>
@@ -35,7 +37,7 @@ export default function UserData(data: User) {
         </div>
         <>
             <p className="text-xs">
-            {data.role=="ClassTeacher" ? "Class teacher" :data.role}
+            {data.role=="ClassTeacher" ? translations.classTeacher :translations.administrator}
             </p>
         </>
         <div className="flex gap-2 items-center">

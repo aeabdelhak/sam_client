@@ -4,6 +4,7 @@ import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
 import ModalCloser from "../Ui/ModalCloser";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function NewGuardian() {
     const { close } = useModal()
@@ -11,6 +12,7 @@ export default function NewGuardian() {
     const { guardians: {
         newGuardian: newGardent
     } } = useAppContext()
+    const translations = useTranslation()
 
     const save: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault()
@@ -36,58 +38,58 @@ export default function NewGuardian() {
                 <div className="flex justify-between">
 
                     <h1 className="font-semibold text-2xl">
-                        Create a guardian
+                        {translations.CreateaGuardian}
                     </h1>
                     <ModalCloser />
                 </div>
                 <p className="text-sm text-gray-500">
-                    fill the form bellow to create a new guardians
+                    {translations.CreateaGuardianDesc}
                 </p>
             </div>
             <div className="flex flex-col gap-2">
                 <label>
                     <p className="text-sm font-bold">
-                        Name
+                        {translations.name}
                     </p>
                     <Input
                         name="name"
                         required
                         disabled={pending}
 
-                        placeholder="guardian Name"
+                        placeholder={translations.guardianName}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        Card id
+                        {translations.cardId}
                     </p>
                     <Input
-                        name="cardId"
+                        name={"cardId"}
+                        placeholder={translations.guardianCardId}
                         disabled={pending}
                         required
-                        placeholder="guardian card id"
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        Phone number
+                        {translations.phoneNumber}
                     </p>
                     <Input
                         name="phone"
                         required
                         disabled={pending}
 
-                        placeholder="guardian phone number"
+                        placeholder={translations.guardianPhoneNumber}
                     />
                 </label>
             </div>
             <div className="flex justify-end gap-2">
-          
+
                 <Button
                     disabled={pending}
                     type="submit"
                     className="bg-blue-700 tracking-wide text-sm text-white px-4 py-2 rounded-lg">
-                    Create
+                    {translations.CreateaGuardian}
                 </Button>
             </div>
         </form>

@@ -1,13 +1,15 @@
 import { FormEventHandler, useState, useTransition } from "react";
-import { Class, Roles, User, useAppContext } from "../Context/AppContext";
+import { Class, useAppContext } from "../Context/AppContext";
 import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
 import { AnimatePresence, motion } from "framer-motion";
 import { CloseSquare } from "react-iconly";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function EditClass(data: Class) {
     const { close } = useModal()
+   const translations= useTranslation()
     const [pending, setPending] = useState(false)
     const { classes: {
         updateClass
@@ -29,7 +31,7 @@ export default function EditClass(data: Class) {
         <div className="p-6 flex flex-col space-y-3">
             <div className="flex justify-between">
             <h1 className="font-semibold text-2xl">
-                    Edit the class name
+                    {translations.editTheClass}
                 </h1>
                 <button
                     disabled={pending}
@@ -42,7 +44,7 @@ export default function EditClass(data: Class) {
             <div className="space-y-2">
                
                 <p className="text-sm text-gray-500">
-                    fill the form bellow to edit the class name
+                {translations.editTheClassDesc}
                 </p>
             </div>
 
@@ -68,7 +70,7 @@ export default function EditClass(data: Class) {
 
                         <label>
                             <p className="text-sm font-bold">
-                                new name
+                                {translations.name}
                             </p>
                             <Input
                                 defaultValue={data.label}
@@ -76,14 +78,14 @@ export default function EditClass(data: Class) {
                                 type="text"
                                 name="label"
                                 disabled={pending}
-                                placeholder="name"
+                                placeholder={translations.name}
                             />
                         </label>
                         <div className="flex justify-end gap-2">
                             <Button
                                 disabled={pending}
                                 type="submit">
-                                change name
+                                {translations.save}
                             </Button>
                         </div>
                     </form>

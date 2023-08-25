@@ -6,12 +6,13 @@ import Modal from '../Ui/Modal';
 import NewStudent from './NewStudent';
 import Updateguardian from './UpdateGuardian';
 import DeleteGuardian from './DeleteGuardian';
+import { useTranslation } from '../../utils/translations/Context';
 
 function GuardianMenu(guardian: guardian) {
     const [deleteGuardian, setdeleteGuardian] = useState(false)
     const [Editguardiant, setEditguardiant] = useState(false)
     const [openStudent, setopenStudent] = useState(false)
-
+    const translations =useTranslation()
 
     return (<>
         <Modal w="max-w-xl" rounded="rounded-3xl" shown={Editguardiant} handler={setEditguardiant}>
@@ -29,7 +30,7 @@ function GuardianMenu(guardian: guardian) {
                 guardianId={guardian?.id}
             />
         </Modal>
-        <Menu as="div" className="relative inline-block text-left">
+        <Menu as="div" className="relative inline-block ">
             {({ open }) =>
                 <>
 
@@ -49,13 +50,13 @@ function GuardianMenu(guardian: guardian) {
                                     <button
                                         onClick={() => setopenStudent(true)}
                                         className={`${active ? 'bg-blue-100 text-blue-700' : 'text-gray-700'
-                                            } flex items-center gap-2 w-full text-left px-4 py-2 text-sm`}
+                                            } flex items-center gap-2 w-full  px-4 py-2 text-xs`}
                                     >
                                         <div className=" p-1 bg-blue-100 rounded-full text-blue-700">
 
                                             <AddUser size={'small'} />
                                         </div>
-                                        Add a Student
+                                        {translations.addAStudent}
                                     </button>
                                 )}
                             </Menu.Item>
@@ -64,13 +65,13 @@ function GuardianMenu(guardian: guardian) {
                                     <button
                                         onClick={() => setEditguardiant(true)}
                                         className={`${active ? 'bg-green-100 text-green-700' : 'text-gray-700'
-                                            } flex items-center gap-2 w-full text-left px-4 py-2 text-sm`}
+                                            } flex items-center gap-2 w-full  px-4 py-2 text-xs`}
                                     >
                                         <div className=" p-1 bg-green-100 rounded-full text-green-700">
 
                                             <User size={'small'} />
                                         </div>
-                                        update informations
+                                        {translations.updateGuardianInformation}
                                     </button>
                                 )}
                             </Menu.Item>
@@ -79,13 +80,13 @@ function GuardianMenu(guardian: guardian) {
                                     <button
                                         onClick={() => setdeleteGuardian(true)}
                                         className={`${active ? 'bg-red-100 text-red-700' : 'text-gray-700'
-                                            } flex items-center gap-2 w-full text-left px-4 py-2 text-sm`}
+                                            } flex items-center gap-2 w-full  px-4 py-2 text-xs`}
                                     >
                                         <div className=" p-1 bg-red-100 rounded-full text-red-700">
 
                                             <Delete size={'small'} />
                                         </div>
-                                        Delete
+                                        {translations.delete}
                                     </button>
                                 )}
                             </Menu.Item>

@@ -8,12 +8,16 @@ import { LoaderIcon, toast } from "react-hot-toast";
 import { ipcRenderer } from "electron";
 import { config } from "../utils/fetch";
 import { useAppContext } from "./Context/AppContext";
+import Title from "./Title";
+import { useSession } from "./Context/SessionConext";
+import { useTranslation } from "../utils/translations/Context";
 
 export default function Login() {
+    const translations=useTranslation()
     const [rooting, setrooting] = useState(false)
     const [pending, start] = useTransition()
     const router = useRouter()
-    const {setUser}=useAppContext()
+    const {setUser}=useSession()
     const authenticate: FormEventHandler<HTMLFormElement> = async (ev) => {
         ev.preventDefault();
         const formdata = new FormData(ev.currentTarget)
@@ -32,7 +36,7 @@ export default function Login() {
             router.replace("/menu")
             ipcRenderer.send("loginSuccess")
         }
-        else toast.error("wrong username or password")
+        else toast.error(translations.wrongCredentials)
     }
     useEffect(() => {
         setUser(undefined)
@@ -46,10 +50,13 @@ export default function Login() {
         }
     }, [])
     if (rooting) return <div className="flex h-screen w-screen justify-center items-center">
+        <Title title=""/>
         <LoaderIcon className="scale-150" />
     </div>
     return (
         <form onSubmit={ev => start(() => authenticate(ev))} className="flex  flex-col justify-center  items-center">
+        <Title title=""/>
+
             <div className="space-y-2 p-4 flex flex-col items-center max-w-sm w-full">
                 
 
@@ -62,29 +69,31 @@ export default function Login() {
                 </div>
             </div>
             <h1 className="font-bold uppercase">
-                authenticate
+                {translations.authenticate}
             </h1>
             <div className="text-gray-400 space-y-2 w-full p-4">
                 <Input
                     disabled={pending}
                     name="username"
-                    placeholder="username"
+                    placeholder={translations.username}
                     type="text"
                     icon={<User size={"small"} />}
                 />
                 <Input
                     disabled={pending}
                     name="password"
-                    placeholder="password"
-                    type="password"
+                    placeholder={translations.password}
                     icon={<Password size={"small"} />}
                 />
-                <Button
+                    <Button
+                        className="w-full !rounded"
                     disabled={pending}
 
                     type="submit"
                 >
-                    {pending ? <LoaderIcon/>:"sign in"}
+                        {pending ? <LoaderIcon /> :
+                    translations.authenticate
+                    }
                 </Button>
             </div>
         </div>

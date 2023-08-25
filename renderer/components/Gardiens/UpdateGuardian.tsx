@@ -4,8 +4,10 @@ import Input from "../Ui/Input/Input";
 import Button from "../Ui/button/Button";
 import { useModal } from "../Ui/Modal";
 import ModalCloser from "../Ui/ModalCloser";
+import { useTranslation } from "../../utils/translations/Context";
 
 export default function UpdateGuardian(guardian: guardian) {
+    const translations = useTranslation()
     const { close } = useModal()
     const [pending, start] = useTransition()
     const { guardians: {
@@ -36,18 +38,18 @@ export default function UpdateGuardian(guardian: guardian) {
             <div className="space-y-2">
                 <div className="flex justify-between">
                     <h1 className="font-semibold text-2xl">
-                        Update a guardian
+                        {translations.updateGuardianInformation2}
                     </h1>
                     <ModalCloser />
                 </div>
                 <p className="text-sm text-gray-500">
-                    fill the form bellow to update the guardian
+                {translations.updateGuardianDesc}
                 </p>
             </div>
             <div className="flex flex-col gap-2">
                 <label>
                     <p className="text-sm font-bold">
-                        Name
+                        {translations.guardianName}
                     </p>
                     <Input
                         required
@@ -55,24 +57,25 @@ export default function UpdateGuardian(guardian: guardian) {
                         defaultValue={guardian.name}
                         disabled={pending}
 
-                        placeholder="guardian Name"
+                        placeholder={translations.guardianName}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        Card id
+                    {translations.guardianCardId}
+
                     </p>
                     <Input
                         required
                         name="cardId"
                         disabled={pending}
                         defaultValue={guardian.cardId}
-                        placeholder="guardian card id"
+                        placeholder={translations.guardianCardId}
                     />
                 </label>
                 <label>
                     <p className="text-sm font-bold">
-                        Phone number
+                    {translations.phoneNumber}
                     </p>
                     <Input
                         required
@@ -81,7 +84,7 @@ export default function UpdateGuardian(guardian: guardian) {
 
                         disabled={pending}
 
-                        placeholder="guardian phone number"
+                        placeholder={translations.phoneNumber}
                     />
                 </label>
             </div>
@@ -91,7 +94,7 @@ export default function UpdateGuardian(guardian: guardian) {
                     disabled={pending}
                     type="submit"
                     className="bg-blue-700 tracking-wide text-sm text-white px-4 py-2 rounded-lg">
-                    update
+                    {translations.updateGuardianInformation}
                 </Button>
             </div>
         </form>
