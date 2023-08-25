@@ -684,6 +684,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
             if (res) {
                 toast.success(translations.allDismissed)
                 await getClass(id)
+                dismissReqs.delete(id)
                 return true
             }
             toast.error("")
