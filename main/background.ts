@@ -16,7 +16,6 @@ let mainWindow: BrowserWindow
 (async () => {
   await app.whenReady();
   const icon = path.join(__dirname, "../images/icon.icns")
-  console.log(icon)
   mainWindow = createWindow('main', {
     width: 400,
     height: 450,

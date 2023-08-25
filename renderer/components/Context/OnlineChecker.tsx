@@ -2,18 +2,19 @@ import { toast } from "react-hot-toast";
 import { config } from "../../utils/fetch";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useAppContext } from "./AppContext";
+import { useAppSelector } from "../../redux/hooks";
+import { useSession } from "./SessionConext";
 export default function OnlineChecker({ children }: { children: ReactNode }) {
     const [online, setonline] = useState(true)
-
     const timer = useRef<NodeJS.Timer>(null)
     const socket = useRef<WebSocket>(null)
     const isMounted = useRef<boolean>(true)
-
+    const host = useAppSelector(e => e.config.host)
+    const {getAuthUser}=useSession()
     function connectToWs() {
-
         socket.current = new WebSocket(config.getremoteAddress().replace("http", "ws"));
-
         socket.current.addEventListener('open', (event) => {
+                getAuthUser();
                 toast("connected to remote server")
                 setonline(true)
 
@@ -49,11 +50,11 @@ export default function OnlineChecker({ children }: { children: ReactNode }) {
             isMounted.current = true;
             clearTimeout(timer.current)
         }
-    }, [])
+    }, [host])
 
     return (
         <div
-
+            key={host}
             className="flex flex-col flex-1 "
 
         >

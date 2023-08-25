@@ -23,7 +23,7 @@ export default function Sidebar() {
                     </div>
                 </div>
                 <hr />
-                <div className="space-y-2 flex flex-col  flex-1">
+                <div className="space-y-2 flex w-full flex-col  flex-1">
 
 
                     <Item
@@ -72,7 +72,7 @@ export default function Sidebar() {
                     />
                 </div>
                 <button
-                    className="hover:bg-white/10 w-full disabled:bg-blue-700 text-sm flex items-center gap-2 rounded-lg p-2 "
+                    className="hover:bg-white/10 capitalize text-xs w-full disabled:bg-blue-700 font-light flex items-center gap-2 rounded-lg p-2 "
                     onClick={logout}>
                     <Logout size={"small"} />
                     {translation.logout}
@@ -92,7 +92,7 @@ function Item({ icon, link, activeOn, profiles, label }: { profiles?: Roles[], l
                     ipcRenderer.send("zoom", true)
                     router.push(link)
                 }}
-                disabled={activeOn == "equal" ? router.pathname == link : router.pathname.startsWith(link)} className="hover:bg-blue-700/10 w-full disabled:text-blue-700 disabled: text-sm flex items-center font-extralight gap-2 rounded-lg p-2 ">
+                disabled={activeOn == "equal" ? router.pathname == link : router.pathname.startsWith(link)} className="hover:bg-blue-700/10 capitalize  disabled:text-blue-700 disabled: text-sm flex items-center font-extralight gap-2 rounded-lg p-2 ">
                 {icon}
                 {label}
             </button>

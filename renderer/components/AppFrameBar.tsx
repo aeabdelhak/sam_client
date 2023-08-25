@@ -1,4 +1,4 @@
-import { ChevronDown, CloseSquare, VolumeOff, VolumeUp } from "react-iconly";
+import { ChevronDown, CloseSquare, Setting, VolumeOff, VolumeUp } from "react-iconly";
 import { CiMaximize2 } from "react-icons/ci";
 import { MdMinimize } from "react-icons/md";
 import { useAppTitle } from "./Context/TitleConext";
@@ -8,6 +8,9 @@ import audioNotif from "../utils/ring";
 import { translation, useTranslation } from "../utils/translations/Context";
 import NavArrows from "./Ui/button/back";
 import { useSession } from "./Context/SessionConext";
+import { config } from "../utils/fetch";
+import IpSettings from "./IpSettings";
+import { useAppSelector } from "../redux/hooks";
 
 export default function AppFrameBar() {
     const { title } = useAppTitle()
@@ -27,7 +30,7 @@ export default function AppFrameBar() {
 
     return (
         <div className=" z-[40] text-xs inset-x-0 fixed   top-0 justify-between items-center bg-white border-b flex ">
-            <div className="ltr:ml-36 rtl:mr-36 flex items-center flex-1">
+            <div className="ltr:ml-40 rtl:mr-40 flex items-center flex-1">
 
                 <NavArrows />
                 <div
@@ -38,84 +41,110 @@ export default function AppFrameBar() {
                     </h1>
                 </div>
             </div>
+            <div className=" gap-2 divide-x flex items-center">
 
-            <div className="">
-                <select className="text-xs" value={code} onChange={e => {
-                    translation.set(e.target.value)
-                }}>
-                    <option value={"en"}>
-                        en
-                    </option>
-                    <option value={"ar"}>
-                        ar
-                    </option>
-                    <option value={"fr"}>
-                        fr
-                    </option>
-                    <option value={"sp"}>
-                        sp
-                    </option>
-                    <option value={"de"}>
-                        de
-                    </option>
 
-                </select>
-            </div>
-            <button
-                onClick={() => setmuted(e => {
-                    !e ? audioNotif.mute() : audioNotif.unmute()
-                    return !e
-                })}
-                className="  w-6 h-6 text-xs cursor-pointer  rounded-full flex justify-center items-center">
-                {!muted ? <VolumeUp size={"small"} /> : <VolumeOff size={"small"} />}
-            </button>
-            {user && <div className=" grid  bg-gray-200 px-2 rounded-lg  ">
-                <div className="flex w-full gap-2 items-center">
-                    <div className=" uppercase bg-blue-200  text-blue-800 w-4 h-4 text-[6pt]  rounded-full flex justify-center items-center">
-                        {user?.name?.charAt(0)}
-                    </div>
-                    <div className=" flex-1 grid">
-                        <p className=" text-xs line-clamp-2 w-full ">
-                            {user?.name}
-                        </p>
-                    </div>
+                <AppConnectedTo />
+                <div className="">
+                    <select className="text-xs outline-none" value={code} onChange={e => {
+                        translation.set(e.target.value)
+                    }}>
+                        <option value={"en"}>
+                            en
+                        </option>
+                        <option value={"ar"}>
+                            ar
+                        </option>
+                        <option value={"fr"}>
+                            fr
+                        </option>
+                        <option value={"sp"}>
+                            sp
+                        </option>
+                        <option value={"de"}>
+                            de
+                        </option>
 
+                    </select>
                 </div>
-
-            </div>}
-            <div className="  text-center w-16 ">
-                <p className="  ">
-                    {curreTime?.toLocaleTimeString("fr", {
-                        hour: "numeric",
-                        minute: "numeric",
-                        second: "2-digit"
+                <button
+                    onClick={() => setmuted(e => {
+                        !e ? audioNotif.mute() : audioNotif.unmute()
+                        return !e
                     })}
-                </p>
+                    className="   w-6 h-6 text-xs cursor-pointer   flex justify-center items-center">
+                    {!muted ? <VolumeUp size={"small"} /> : <VolumeOff size={"small"} />}
+                </button>
+                {user && <div className=" grid  bg-gray-200 px-2 rounded-lg  ">
+                    <div className="flex w-full gap-2 items-center">
+                        <div className=" uppercase bg-blue-200  text-blue-800 w-4 h-4 text-[6pt]  rounded-full flex justify-center items-center">
+                            {user?.name?.charAt(0)}
+                        </div>
+                        <div className=" flex-1 grid">
+                            <p className=" text-xs line-clamp-2 w-full ">
+                                {user?.name}
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>}
+                <div className="  text-center w-16 ">
+                    <p className="  ">
+                        {curreTime?.toLocaleTimeString("fr", {
+                            hour: "numeric",
+                            minute: "numeric",
+                            second: "2-digit"
+                        })}
+                    </p>
+                </div>
+                <div className="flex border-l rounded">
+                    <button
+                        onClick={e => ipcRenderer.send("minimizeApp")}
+                        className="  w-6 h-6 cursor-pointer text-xs hover:bg-gray-100  rounded flex justify-center items-center">
+                        <MdMinimize
+
+                        />
+                    </button>
+                    <button
+                        onClick={e => ipcRenderer.send("maximizeApp")}
+                        className="  w-6 h-6 cursor-pointer text-xs hover:bg-gray-100  rounded flex justify-center items-center">
+                        <CiMaximize2
+
+                        />
+                    </button>
+
+                    <button
+                        onClick={e => ipcRenderer.send("closeApp")}
+                        className="  w-6 h-6 cursor-pointer text-xs hover:bg-gray-100  rounded flex justify-center items-center">
+                        <CloseSquare
+                            size={"small"}
+                        />
+                    </button>
+                </div>
             </div>
-            <div className="flex border-l rounded">
-                <button
-                    onClick={e => ipcRenderer.send("minimizeApp")}
-                    className="  w-6 h-6 cursor-pointer text-xs hover:bg-gray-100  rounded flex justify-center items-center">
-                    <MdMinimize
+        </div>
+    )
+}
 
-                    />
-                </button>
-                <button
-                    onClick={e => ipcRenderer.send("maximizeApp")}
-                    className="  w-6 h-6 cursor-pointer text-xs hover:bg-gray-100  rounded flex justify-center items-center">
-                    <CiMaximize2
+function AppConnectedTo() {
+    const host=useAppSelector(e=>e.config.nudedHost)
 
-                    />
-                </button>
+    const [openConfigs, setopenConfigs] = useState(false)
+  
 
-                <button
-                    onClick={e => ipcRenderer.send("closeApp")}
-                    className="  w-6 h-6 cursor-pointer text-xs hover:bg-gray-100  rounded flex justify-center items-center">
-                    <CloseSquare
-                        size={"small"}
-                    />
-                </button>
-            </div>
+    return (
+        <div className="flex gap-2">
+            {host}
+           {openConfigs && <IpSettings
+                open={openConfigs}
+                setOpen={setopenConfigs}
+            />}
+            <button
+            onClick={()=>setopenConfigs(true)}
+            >
+                 <Setting size={"small"} />
+            </button>
         </div>
     )
 }

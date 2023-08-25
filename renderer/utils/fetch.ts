@@ -2,18 +2,24 @@ import Router from "next/router"
 import { toast } from "react-hot-toast"
 import { Image } from "../types/class"
 import { translation } from "./translations/Context"
+import { store } from "../redux/store"
+import { setRemote } from "../redux/reducers/config"
 
 type props = Parameters<typeof fetch>
 export class config {
-    private static remoteAddress = ""
     static async setremoteAddress(str: string) {
         await new Promise((resolve) => {
-            config.remoteAddress = str
+            store.dispatch(setRemote({ host: str }))
             resolve(true);
         })
     }
     static getremoteAddress() {
-        return config.remoteAddress
+        const host = store.getState().config.host
+        return host
+    }
+    static getremoteAddressNuded() {
+        return store.getState().config.nudedHost
+
     }
     static remoteImageUrl(img: Image) {
         return config.getremoteAddress().concat("/", img?.url)
