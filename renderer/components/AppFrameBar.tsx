@@ -52,6 +52,12 @@ export default function AppFrameBar() {
                     <option value={"fr"}>
                         fr
                     </option>
+                    <option value={"sp"}>
+                        sp
+                    </option>
+                    <option value={"de"}>
+                        de
+                    </option>
 
                 </select>
             </div>

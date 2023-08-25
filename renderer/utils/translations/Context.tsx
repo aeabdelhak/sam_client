@@ -2,12 +2,16 @@ import { ReactNode, createContext, useContext, useEffect, useState } from "react
 import ar from "./ar"
 import en from "./ en"
 import fr from "./fr"
+import de from "./de"
+import sp from "./sp"
 
 export class translation {
     static getCurrent() {
         const saved = localStorage.getItem("language")
         if (saved == "ar") return ar
         if (saved == "fr") return fr
+        if (saved == "de") return de
+        if (saved == "sp") return sp
         else return en
     }
     static set(code: string) {
