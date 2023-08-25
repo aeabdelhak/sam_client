@@ -81,6 +81,7 @@ export default function Login() {
                 />
                 <Input
                     disabled={pending}
+                    type="password"
                     name="password"
                     placeholder={translations.password}
                     icon={<Password size={"small"} />}
