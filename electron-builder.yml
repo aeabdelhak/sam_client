@@ -1,6 +1,6 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+appId: com.samclient.skillTech
+productName: sam client
+copyright: Copyright © 2023 skillTech
 directories:
   output: dist
   buildResources: resources
@@ -9,4 +9,14 @@ files:
     filter:
       - package.json
       - app
+
 publish: null
+
+mac:
+  icon: ./images/icon.icns # macOS icon path
+
+win:
+  icon: ./images/icon.ico # Windows icon path
+
+linux:
+  icon: ./images/icon.png # Linux icon path

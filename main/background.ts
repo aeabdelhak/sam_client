@@ -3,6 +3,7 @@ import serve from 'electron-serve';
 import { createWindow } from './helpers';
 import find from 'local-devices'
 import { exec } from "child_process"
+import path from 'path';
 const isProd: boolean = process.env.NODE_ENV === 'production';
 const isMacOS = process.platform === 'darwin';
 
@@ -14,11 +15,13 @@ if (isProd) {
 let mainWindow: BrowserWindow
 (async () => {
   await app.whenReady();
-
+  const icon = path.join(__dirname, "../images/icon.icns")
+  console.log(icon)
   mainWindow = createWindow('main', {
     width: 400,
     height: 450,
     frame: false,
+    icon:icon,
     resizable: false,
     autoHideMenuBar: true,
     titleBarStyle: "default",
@@ -36,6 +39,7 @@ let mainWindow: BrowserWindow
 
   }
 })();
+
 ipcMain.on("loginSuccess", () => {
   mainWindow.webContents.clearHistory();
   mainWindow.resizable = true;
