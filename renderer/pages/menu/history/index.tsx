@@ -65,7 +65,7 @@ export default function Index() {
     return (
         <div>
             <Title
-                title="history"
+                title={translations.presenceHistory}
             />
             <div className="flex mb-6 flex-col gap-4">
                 <h1 className="font-semibold text-3xl">

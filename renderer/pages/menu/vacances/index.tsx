@@ -46,7 +46,7 @@ export default function ScheduleContent() {
 
     }
 
-
+const translations=useTranslation()
     return (
 
         <form
@@ -55,7 +55,7 @@ export default function ScheduleContent() {
         >
 
             <Title
-                title={"Vacances "}
+                title={translations.vacances}
             />
             {upserting
                 &&

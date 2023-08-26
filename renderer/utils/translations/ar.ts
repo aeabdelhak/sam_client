@@ -106,6 +106,7 @@ const ar = {
     allDismissed:"تم صرف الجميع بنجاح",
     sessionTimeOut: "انتهت الجلسة",
     logout: "الخروج",
+    schedule:"جدول ",
     vacancesupdatedsuccess:"تم تحديث برنامج العطل بنجاح",
     
 

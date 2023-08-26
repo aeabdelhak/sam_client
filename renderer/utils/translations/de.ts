@@ -106,6 +106,8 @@ const de = {
     allDismissed: "Alle entlassen",
     vacancesupdatedsuccess: "Ferien erfolgreich aktualisiert",
     sessionTimeOut: "Sitzung abgelaufen",
-    logout: "Abmelden"
+    logout: "Abmelden",
+    schedule:" Zeitplan"
+
 };
 export default de

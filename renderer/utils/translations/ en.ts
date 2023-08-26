@@ -106,7 +106,9 @@ const en = {
     allDismissed: "all dismissed",
     vacancesupdatedsuccess:"vacances updated successfully",
     sessionTimeOut: "session timed out",
-    logout:"logout"
+    logout: "logout",
+    schedule:" schedule"
+    
 
 }
 export default en;

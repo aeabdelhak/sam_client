@@ -106,7 +106,8 @@ const fr = {
     allDismissed: "tous renvoyés",
     vacancesupdatedsuccess: "vacances mises à jour avec succès",
     sessionTimeOut: "la session a expiré",
-    logout: "déconnexion"
+    logout: "déconnexion",
+    schedule:" calendrier"
 };
 
 export default fr ;

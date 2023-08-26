@@ -26,7 +26,7 @@ export default function Access() {
                 <NewUser />
             </Modal>
             <Title
-                title="users manager"
+                title={translations.userManager}
             />
             <div className="flex mb-6 flex-col gap-4">
                 <h1 className="font-semibold text-3xl">

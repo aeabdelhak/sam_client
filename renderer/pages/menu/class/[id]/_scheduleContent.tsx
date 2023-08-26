@@ -24,6 +24,8 @@ export default function ScheduleContent() {
     const [fetching, setfetching] = useState(true)
     const [loading, start] = useState(false)
     const [render, rerender] = useState(0)
+    const translations=useTranslation()
+
     const {
         scheduls: {
             getSchedule,
@@ -75,7 +77,6 @@ export default function ScheduleContent() {
         start(false)
 
     }
-
     return (
 
         <form
@@ -84,7 +85,7 @@ export default function ScheduleContent() {
         >
 
             <Title
-                title={(router.query.label as string ?? '').concat(" schedule")}
+                title={(router.query.label as string ?? '').concat("-",translations.schedule)}
             />
             {loading
                 &&

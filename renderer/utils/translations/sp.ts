@@ -106,6 +106,8 @@ const sp = {
     allDismissed: "todos despedidos",
     vacancesupdatedsuccess: "vacaciones actualizadas exitosamente",
     sessionTimeOut: "sesión agotada",
-    logout: "cerrar sesión"
+    logout: "cerrar sesión",
+    schedule:" cronograma"
+
 };
 export default sp
