@@ -32,7 +32,8 @@ const fr = {
     endsAt: "termine à",
     classPageDesc: "gardez cet écran ouvert pour obtenir les dernières mises à jour",
     guardianPageDesc: "gérer à la fois les gardiens et les étudiants",
-    dismissAll: "rejeter tout",
+    dismissAll: "renvoyer tout",
+    dismissStudent: "renvoyer un étudiant",
     search: "recherche",
     CreateaGuardian: "Créer un gardien",
     CreateaGuardianDesc: "remplissez le formulaire ci-dessous pour créer un nouveau gardien",
@@ -107,7 +108,10 @@ const fr = {
     vacancesupdatedsuccess: "vacances mises à jour avec succès",
     sessionTimeOut: "la session a expiré",
     logout: "déconnexion",
-    schedule:" calendrier"
+    schedule: " calendrier",
+    ignore: "ignorer",
+    dismiss:"renvoyer",
+    
 };
 
 export default fr ;

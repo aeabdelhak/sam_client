@@ -32,19 +32,20 @@ const ar = {
     endsAt: "الى",
     classPageDesc:"ابق هذه الصفحة مفتوحة للحصول على اخر الاحداث",
     guardianPageDesc:"قم بإدارة كل من الأوصياء والمتمدرسين",
-    dismissAll: "افصل الكل",
+    dismissAll: "صرف الكل",
+    dismissStudent: "صرف المتمدرس",
     search: "البحث",
-    CreateaGuardian: "مرافق جديد",
-    CreateaGuardianDesc:"إملئ معلومات المرافق الجديد ",
-    updateGuardianDesc:"إملئ معلومات المرافق  ",
+    CreateaGuardian: "وصي جديد",
+    CreateaGuardianDesc:"إملئ معلومات الوصي الجديد ",
+    updateGuardianDesc:"إملئ معلومات الوصي  ",
     name:"الإسم",    
-    guardianName: "إسم المرافق",
+    guardianName: "إسم الوصي",
     cardId:"الرقم الوطني"    ,
-    guardianPhoneNumber:"رقم هاتق المرافق",
+    guardianPhoneNumber:"رقم هاتق الوصي",
     phoneNumber:"رقم الهاتف"    ,
-    guardianCardId: "الرقم الوطني للمرافق",
+    guardianCardId: "الرقم الوطني للوصي",
     addAStudent:"متمدرس جديد",
-    updateGuardianInformation2:" تحديث معلومات المرافق",
+    updateGuardianInformation2:" تحديث معلومات الوصي",
     updateGuardianInformation:"تحديث المعلومات",
     delete: "حذف",
     addAStudentDesc: "إملئ معلومات المتمدرس الجديد ",
@@ -108,6 +109,9 @@ const ar = {
     logout: "الخروج",
     schedule:"جدول ",
     vacancesupdatedsuccess:"تم تحديث برنامج العطل بنجاح",
+    ignore: "تجاهل",
+    dismiss:"صرف"
+    
     
 
 

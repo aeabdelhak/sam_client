@@ -79,7 +79,7 @@ export default function HomePage() {
                                 href={"/menu/class/" + e.id + "?label=" + e.label}
                                 key={e.id}
                             >
-                                <a className="flex w-full group transition-all disabled:bg-blue-700  items-center disabled:text-white space-x-2 p-4 bg-white rounded-md  hover:bg-gray-50">
+                                <a className="flex w-full group transition-all disabled:bg-blue-700  items-center disabled:text-white gap-2 p-2 bg-white rounded-md hover:text-blue-600 hover:bg-blue-100">
 
                                     <div className="flex flex-1 items-start space-y-1 flex-col">
                                         <p className="text-sm ">

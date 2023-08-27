@@ -128,14 +128,18 @@ export default function AppFrameBar() {
 }
 
 function AppConnectedTo() {
-    const host=useAppSelector(e=>e.config.nudedHost)
+    const {nudedHost,online}=useAppSelector(e=>e.config)
 
     const [openConfigs, setopenConfigs] = useState(false)
   
 
     return (
         <div className="flex gap-2">
-            {host}
+            {nudedHost && 
+                <div className="flex gap-1 items-center">
+                   <div className={" p-[5px] rounded-full ".concat(online? "bg-green-500":"bg-red-500")}/> {nudedHost}
+            </div>
+            }
            {openConfigs && <IpSettings
                 open={openConfigs}
                 setOpen={setopenConfigs}

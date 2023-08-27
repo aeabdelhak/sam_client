@@ -4,23 +4,25 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { useAppContext } from "./AppContext";
 import { useAppSelector } from "../../redux/hooks";
 import { useSession } from "./SessionConext";
+import { store } from "../../redux/store";
+import { setOnline } from "../../redux/reducers/config";
 export default function OnlineChecker({ children }: { children: ReactNode }) {
-    const [online, setonline] = useState(true)
+    const {online} = useAppSelector(e=>e.config)
     const timer = useRef<NodeJS.Timer>(null)
     const socket = useRef<WebSocket>(null)
     const isMounted = useRef<boolean>(true)
     const host = useAppSelector(e => e.config.host)
-    const {getAuthUser}=useSession()
+    const { getAuthUser } = useSession()
     function connectToWs() {
         socket.current = new WebSocket(config.getremoteAddress().replace("http", "ws"));
         socket.current.addEventListener('open', (event) => {
-                getAuthUser();
-                toast("connected to remote server")
-                setonline(true)
+            store.dispatch(setOnline(true))
+            getAuthUser();
+            toast("connected to remote server")
 
         });
         socket.current.addEventListener('close', (event) => {
-            setonline(false)
+            store.dispatch(setOnline(false))
             if (isMounted.current)
                 timer.current = setTimeout(() => {
                     connectToWs()
@@ -29,15 +31,16 @@ export default function OnlineChecker({ children }: { children: ReactNode }) {
     }
     function removeWsEvents() {
         socket.current?.removeEventListener('open', (event) => {
-            setonline(true)
+            store.dispatch(setOnline(true))
             toast("connected to remote server")
         });
 
         socket.current?.removeEventListener('close', (event) => {
-                if (isMounted.current)
-                    timer.current = setTimeout(() => {
-                        connectToWs()
-                    }, 2000);
+            store.dispatch(setOnline(false))
+            if (isMounted.current)
+                timer.current = setTimeout(() => {
+                    connectToWs()
+                }, 2000);
         });
     }
 

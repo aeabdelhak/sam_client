@@ -33,6 +33,7 @@ const de = {
     classPageDesc: "Halten Sie diesen Bildschirm geöffnet, um die neuesten Updates zu erhalten",
     guardianPageDesc: "Verwalten Sie sowohl Wächter als auch Schüler",
     dismissAll: "Alle entlassen",
+    dismissStudent: "Schüler entlassen",
     search: "Suchen",
     CreateaGuardian: "Einen Wächter erstellen",
     CreateaGuardianDesc: "Füllen Sie das Formular unten aus, um einen neuen Wächter zu erstellen",
@@ -107,7 +108,10 @@ const de = {
     vacancesupdatedsuccess: "Ferien erfolgreich aktualisiert",
     sessionTimeOut: "Sitzung abgelaufen",
     logout: "Abmelden",
-    schedule:" Zeitplan"
+    schedule: " Zeitplan",
+    ignore: "ignorieren",
+    dismiss:"zurückweisen",
+    
 
 };
 export default de

@@ -33,6 +33,7 @@ const sp = {
     classPageDesc: "mantén esta pantalla abierta para obtener las últimas actualizaciones",
     guardianPageDesc: "gestiona tanto a los guardianes como a los estudiantes",
     dismissAll: "descartar todo",
+    dismissStudent: "Despedir al estudiante",
     search: "buscar",
     CreateaGuardian: "Crear un tutor",
     CreateaGuardianDesc: "rellena el formulario a continuación para crear un nuevo tutor",
@@ -107,7 +108,9 @@ const sp = {
     vacancesupdatedsuccess: "vacaciones actualizadas exitosamente",
     sessionTimeOut: "sesión agotada",
     logout: "cerrar sesión",
-    schedule:" cronograma"
+    schedule: " cronograma",
+    ignore: "ignorar",
+    dismiss:"despedir"
 
 };
 export default sp
