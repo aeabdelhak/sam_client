@@ -7,6 +7,7 @@ import { Delete, Plus } from "react-iconly"
 import { randomUUID } from "crypto"
 import Button from "../../../components/Ui/button/Button"
 import { useTranslation } from "../../../utils/translations/Context"
+import Input from "../../../components/Ui/Input/Input"
 
 export default function ScheduleContent() {
     const [upserting, start] = useState(false)
@@ -161,27 +162,31 @@ function Vacancies({ saved }: {
                         <input type="hidden" name="id" value={e.id} />
                         <label className=" flex gap-2 items-center">
                             <b className="text-xs text-gray-500 font-medium ">{translations.startsAt}</b>
-                            <input
+                            <Input
+                                bodered
                                 onChange={() => document.dispatchEvent(new Event("touched"))}
-                                defaultValue={formatDate(e.startDate)} required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="startTime[]" id="" />
+                                defaultValue={formatDate(e.startDate)} required  type="date" name="startTime[]" id="" />
                         </label>
                         <label className=" flex gap-2 items-center">
                             <b className="text-xs text-gray-500 font-medium ">
                                 {translations.endsAt}
                             </b>
-                            <input
+                            <Input
+                                bodered
                                 onChange={() => document.dispatchEvent(new Event("touched"))}
 
-                                defaultValue={formatDate(e.endDate)} required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="endTime[]" id="" />
+                                defaultValue={formatDate(e.endDate)} required  type="date" name="endTime[]" id="" />
                         </label>
                         <label className=" flex gap-2 items-center">
                             <b className="text-xs text-gray-500 font-medium ">
                                 {translations.name}
                             </b>
-                            <input
+                            <Input
+                                bodered
+                                placeholder={e.label}
                                 onChange={() => document.dispatchEvent(new Event("touched"))}
 
-                                defaultValue={e.label} required className="bg-transparent px-4 py-1 border rounded-md" type="text" name="label[]" id="" />
+                                defaultValue={e.label} required  type="text" name="label[]" id="" />
                         </label>
                         <div className="flex justify-end">
                             <button
@@ -207,24 +212,28 @@ function Vacancies({ saved }: {
                         <b className="text-xs text-gray-500 font-medium ">
                             {translations.startsAt}
                         </b>
-                        <input
+                        <Input
+                            placeholder={translations.startsAt}
+                            bodered
                             onChange={() => document.dispatchEvent(new Event("touched"))}
-                            required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="startTime[]" id="" />
+                            required  type="date" name="startTime[]" id="" />
                     </label>
                     <label className=" flex gap-2 items-center">
                         <b className="text-xs text-gray-500 font-medium ">
                             {translations.endsAt}
                         </b>
-                        <input
+                        <Input
+                            bodered
+                            placeholder={translations.endsAt}
                             onChange={() => document.dispatchEvent(new Event("touched"))}
 
-                            required className="bg-transparent px-4 py-1 border rounded-md" type="date" name="endTime[]" id="" />
+                            required  type="date" name="endTime[]" id="" />
                     </label>
                     <label className=" flex gap-2 items-center">
                         <b className="text-xs text-gray-500 font-medium ">
                             {translations.name}
                         </b>
-                        <input required className="bg-transparent px-4 py-1 border rounded-md" type="text" name="label[]" id="" />
+                        <Input placeholder={translations.name} bodered required  type="text" name="label[]" id="" />
                     </label>
                     <div className="flex justify-end">
                         <button
