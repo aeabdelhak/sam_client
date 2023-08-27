@@ -75,7 +75,7 @@ export default function AppFrameBar() {
                     className="   w-6 h-6 text-xs cursor-pointer   flex justify-center items-center">
                     {!muted ? <VolumeUp size={"small"} /> : <VolumeOff size={"small"} />}
                 </button>
-                {user && <div className=" grid  bg-blue-100  rounded-lg  ">
+                {user?.id && <div className=" grid  bg-blue-100  rounded-lg  ">
                     <div className="flex bgbl justify-center w-full  items-center">
                         <div className=" uppercase bg-blue-200  text-blue-800 w-4 h-4 text-[10pt]  rounded-full flex justify-center items-center">
                             {user?.name?.charAt(0)}
