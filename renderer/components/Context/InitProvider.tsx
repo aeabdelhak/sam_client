@@ -5,13 +5,17 @@ import { useAppSelector } from '../../redux/hooks';
 import { initConfig } from '../../redux/reducers/config';
 import IpSettings from '../IpSettings';
 import { LoaderIcon } from 'react-hot-toast';
+import { ipcRenderer } from 'electron';
 
 
 export default function InitProvider({ children }: { children: ReactNode }) {
     const config = useAppSelector(e => e.config)
 
     useEffect(() => {
-        store.dispatch(initConfig({ host: localStorage.getItem("remoteIp") }))
+        (async () => {
+            const remote = await ipcRenderer.sendSync("getRemoteIp")
+            store.dispatch(initConfig({ host: remote }))
+        })()
     }, [])
 
     if (!config.init) return <div className="w-screen h-screen flex justify-center items-center">

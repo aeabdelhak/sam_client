@@ -14,7 +14,7 @@
   "build": {
     "appId": "com.sam.clien",
     "productName": "SAM client",
-    "icon":"resources/icon.png",
+    "icon": "resources/icon.png",
     "linux": {
       "target": "AppImage"
     },
@@ -28,6 +28,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.15",
     "@reduxjs/toolkit": "^1.9.5",
+    "electron-fetch": "^1.9.1",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
     "framer-motion": "^10.13.0",

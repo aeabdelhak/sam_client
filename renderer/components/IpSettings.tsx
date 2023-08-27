@@ -12,7 +12,7 @@ import { useTranslation } from "../utils/translations/Context";
 export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
     const [auto, setauto] = useState(true)
     const [step, setstep] = useState(0)
-    const translations=useTranslation()
+    const translations = useTranslation()
 
     return (
         <Modal shown={open} handler={setOpen}>
@@ -43,7 +43,7 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
                                 {translations.auto}
                             </div>
                             <p className="text-sm font-extralight px-5">
-                               {translations.autoDesc}
+                                {translations.autoDesc}
                             </p>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
                     </div>
                 </div>}
                 {step == 1 && !auto && <Manual setstep={setstep} />}
-                {step == 1 && auto && <AutoLockup />}
+                {step == 1 && auto && <AutoLockup setStep={setstep} />}
             </div>
         </Modal>
     )
@@ -86,31 +86,30 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
 function Manual({ setstep }: { setstep: any }) {
     const [loading, setloading] = useState(false)
     const { close } = useModal()
-    const translations=useTranslation()
+    const translations = useTranslation()
     return <form
         onSubmit={async e => {
             e.preventDefault()
             const remote = (new FormData(e.currentTarget)).get("remote") as string
             setloading(true)
-            try {
-                const url = "http://" + remote + ":4000/connect"
-                const data = await (await fetch(url)).json()
-                if (data) {
-                    await config.setremoteAddress(remote)
-                    localStorage.setItem("remoteIp", remote)
-                    toast.success("remote server set succesfully")
-                    close()
-                }
-            } catch (error) {
+
+            const data = await ipcRenderer.sendSync("setRemoteIp", remote)
+            if (data) {
+                await config.setremoteAddress(remote)
+                close()
+            }
+            else {
+                toast.error("unable to find a server within the ip/host you provided ")
 
             }
+
             setloading(false)
 
         }}
         className="p-6 space-y-5">
         <div className="flex   flex-col items-start">
             <button
-            type="button"
+                type="button"
                 onClick={() => setstep(0)}>
                 <ChevronLeft />
             </button>
@@ -140,36 +139,28 @@ function Manual({ setstep }: { setstep: any }) {
     </form>
 }
 
-function AutoLockup() {
+function AutoLockup({ setStep }: { setStep: any }) {
     const [loading, setloading] = useState(true)
     const { close } = useModal()
-    const translations=useTranslation()
+    const translations = useTranslation()
     async function lockUp() {
-        const ips = await ipcRenderer.sendSync("remoteLockUp") as string[]
-        await Promise.all(ips.map(async ip => {
-            try {
-                const abortController = new AbortController()
-                setTimeout(() => {
-                    abortController.abort()
-                }, 500);
-                const url = "http://" + ip + ":4000/connect"
-                const data = await (await fetch(url, {
-                    signal: abortController.signal
-                })).json()
-                if (data == true) {
-                    await config.setremoteAddress(ip)
-                    localStorage.setItem("remoteIp", ip)
-                    toast.success("remote server set succesfully")
-                    close()
-                    setloading(false)
-                }
-            } catch (error) {
-            }
-        }))
+        setloading(true)
+        const found = await ipcRenderer.sendSync("remoteLockUp")
+        if (found) {
+            await config.setremoteAddress(found)
+            return close()
+        }
+        else toast.error("unable to find a server within your network")
+        setStep(0)
         setloading(false)
     }
     useEffect(() => {
-        lockUp()
+        const timeout=setTimeout(() => {
+            lockUp()
+        }, 500);
+        return () => {
+            clearTimeout(timeout)
+        }
     }, [])
 
     return <form className="p-6 space-y-5">

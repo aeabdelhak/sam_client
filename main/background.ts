@@ -3,7 +3,7 @@ import serve from 'electron-serve';
 import { createWindow } from './helpers';
 import find from 'local-devices'
 import { exec } from "child_process"
-import path from 'path';
+import fetch from 'electron-fetch'
 import Store from "electron-store"
 const isProd: boolean = process.env.NODE_ENV === 'production';
 const isMacOS = process.platform === 'darwin';
@@ -61,7 +61,29 @@ ipcMain.on("loginSuccess", (ev, data) => {
 })
 ipcMain.on("remoteLockUp", async (event) => {
   const connected = await getConnectedIPAddresses()
-  event.returnValue = connected;
+  let found = false;
+  await Promise.all((connected as string[]).map(async ip => {
+    try {
+      const abortController = new AbortController()
+      setTimeout(() => {
+        abortController.abort()
+      }, 500);
+      const url = "http://" + ip + ":4000/connect"
+      const data = await (await fetch(url, {
+        signal: abortController.signal
+      })).json()
+      if (data == true) {
+        found = true;
+        event.returnValue = ip;
+        store.set("remoteIp", ip)
+      }
+    } catch (error) {
+    }
+  }))
+  if (!found)
+    event.returnValue = null;
+
+
 })
 ipcMain.on("minimizeApp", async (event) => {
   mainWindow.minimize();
@@ -91,6 +113,25 @@ ipcMain.on("logoutSuccess", async (ev, data) => {
 
 ipcMain.on("getToken", (ev) => {
   ev.returnValue = store.get("authToken")
+})
+
+ipcMain.on("getRemoteIp", (ev) => {
+  ev.returnValue = store.get("remoteIp")
+})
+ipcMain.on("setRemoteIp", async (ev, data) => {
+  const url = "http://" + data + ":4000/connect"
+  try {
+    const res = await (await fetch(url)).json()
+    if (res == true) {
+      store.set("remoteIp", data);
+      return ev.returnValue = true;
+    }
+    ev.returnValue = false;
+  } catch (error) {
+    ev.returnValue = false;
+  }
+
+
 })
 
 

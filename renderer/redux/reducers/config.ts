@@ -19,7 +19,6 @@ const configSlice = createSlice({
     initialState,
     reducers: {
         setRemote(state, action: PayloadAction<{ host: string }>) {
-            localStorage.setItem("remoteIp", host)
             state.nudedHost = action.payload.host
             state.host = `http://${action.payload.host}:4000`
             return state
