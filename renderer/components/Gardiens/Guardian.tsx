@@ -29,7 +29,7 @@ export default function Guardians({ data }: { data: guardian[] }) {
 
             <div className="flex mb-6 flex-col gap-4">
                 <h1 className="font-semibold text-3xl">
-                {translations.guarndiansAndStudents}
+                {translations.guardiansAndStudents}
 
                 </h1>
                 <p className="text-xs">
@@ -55,7 +55,7 @@ export default function Guardians({ data }: { data: guardian[] }) {
                         <div className="">
                             <Button
                                 onClick={() => setopenguardian(true)}>
-                                {translations.CreateaGuardian}
+                                {translations.createAGuardian}
                             </Button>
                         </div>
                     </div>

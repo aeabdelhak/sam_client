@@ -68,7 +68,7 @@ export default function EditUser(data: User) {
                     disabled={!showPass}
                     onClick={e => setshowPass(false)}
                     className="disabled:bg-blue-700 disabled:!text-white bg-transparent !text-gray-500">
-                    {translations.informations}
+                    {translations.information}
                 </Button>
                 <Button
                     disabled={showPass}

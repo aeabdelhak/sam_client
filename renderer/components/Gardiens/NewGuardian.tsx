@@ -38,12 +38,12 @@ export default function NewGuardian() {
                 <div className="flex justify-between">
 
                     <h1 className="font-semibold text-2xl">
-                        {translations.CreateaGuardian}
+                        {translations.createAGuardian}
                     </h1>
                     <ModalCloser />
                 </div>
                 <p className="text-sm text-gray-500">
-                    {translations.CreateaGuardianDesc}
+                    {translations.createAGuardianDesc}
                 </p>
             </div>
             <div className="flex flex-col gap-2">
@@ -89,7 +89,7 @@ export default function NewGuardian() {
                     disabled={pending}
                     type="submit"
                     className="bg-blue-700 tracking-wide text-sm text-white px-4 py-2 rounded-lg">
-                    {translations.CreateaGuardian}
+                    {translations.createAGuardian}
                 </Button>
             </div>
         </form>

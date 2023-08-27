@@ -46,7 +46,7 @@ export default function NewUser() {
                     <ModalCloser/>
                 </div>
                 <p className="text-xs text-gray-500">
-                    {translations.newUserDsc}
+                    {translations.newUserDesc}
                 </p>
             </div>
             <div className="flex flex-col gap-4">

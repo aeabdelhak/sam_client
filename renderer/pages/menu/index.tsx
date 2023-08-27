@@ -12,11 +12,11 @@ function getGreetingSText() {
     const currentHour = currentTime.getHours();
 
     if (currentHour >= 5 && currentHour < 12) {
-        return translation.getCurrent().haveawonderfulday;
+        return translation.getCurrent().haveAWonderfulDay;
     } else if (currentHour >= 12 && currentHour < 17) {
-        return translation.getCurrent().enjoyyourafternoon;
+        return translation.getCurrent().enjoyYourAfternoon;
     } else if (currentHour >= 17 && currentHour < 21) {
-        return translation.getCurrent().havealovelyevening;
+        return translation.getCurrent().haveALovelyEvening;
     } else {
         return translation.getCurrent().goodNight;
     }

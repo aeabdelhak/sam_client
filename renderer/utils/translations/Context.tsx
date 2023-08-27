@@ -4,7 +4,7 @@ import en from "./ en"
 import fr from "./fr"
 import de from "./de"
 import sp from "./sp"
-
+export type ITranslation=typeof en
 export class translation {
     static getCurrent() {
         const saved = localStorage.getItem("language")

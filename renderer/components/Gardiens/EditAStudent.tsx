@@ -60,7 +60,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                     disabled={!showDelete}
                     onClick={e => setshowDelete(false)}
                     className="disabled:bg-blue-700 disabled:!text-white bg-transparent !text-gray-500">
-                    {translations.informations}
+                    {translations.information}
                 </Button>
                 <Button
                     disabled={showDelete}

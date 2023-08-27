@@ -150,7 +150,7 @@ function Vacancies({ saved }: {
                 onClick={newSc}
                 className="text-blue-700 flex items-center text-xs gap-2 p-1 rounded hover:bg-blue-100">
                 <Plus size={"small"} />
-                {translations.newholiday}
+                {translations.newHoliday}
             </button>
         </div>
         <div className="shadow-xl divide-y p-2 rounded-lg">

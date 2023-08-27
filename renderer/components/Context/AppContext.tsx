@@ -581,7 +581,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 return true;
             }
             if (res.notFound) {
-                toast.error(translations.UserNotFound)
+                toast.error(translations.userNotFound)
                 return false;
             }
             if (res.exist) {
@@ -810,7 +810,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 }
             })
             if (res.success) {
-                toast.success(translations.holidaysupdatedsuccess)
+                toast.success(translations.holidaysUpdatedSuccess)
                 await getVacances()
                 return true
             }

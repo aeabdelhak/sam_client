@@ -28,7 +28,7 @@ export default function DeleteUser(user: User) {
             <ModalCloser/>
             </div>
             <p className="text-sm">
-                 {translations.deletUserAsk}
+                 {translations.deleteUserAsk}
             </p>
 
             <div className="flex justify-end">

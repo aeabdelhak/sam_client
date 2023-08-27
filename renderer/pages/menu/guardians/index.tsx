@@ -33,7 +33,7 @@ export default function Page() {
     return (
         <>
             <Title
-                title={translations.guarndiansAndStudents}
+                title={translations.guardiansAndStudents}
             />
 
             {(!classes && loadingClasses) ?
