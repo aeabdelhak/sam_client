@@ -114,7 +114,7 @@ const de = {
     manual: "manuell",
     manualDesc: "Wenn Sie ein kompliziertes lokales Netzwerk haben, wird empfohlen, die IP-Adresse manuell einzugeben.",
     auto: "automatisch",
-    autoDesc: "Wenn Sie ein kompliziertes lokales Netzwerk haben, wird empfohlen, die IP-Adresse manuell einzugeben.",
+    autoDesc: "Die App wird Ihr Netzwerk durchsuchen und die IP-Adresse automatisch erkennen.",
     ipConfigurations: "IP-Konfigurationen",
     next: "weiter"
 };

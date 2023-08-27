@@ -114,7 +114,7 @@ const en = {
     manual: "manual",
     manualDesc: "if you have a complicated local network, it is recommended to enter the IP address manually.",
     auto: "auto",
-    autoDesc: "if you have a complicated local network, it is recommended to enter the IP address manually.",
+    autoDesc: " the app will scan your network and discover the ip address automatically.",
     ipConfigurations: "Ip configurations",
     next:"next"
 
