@@ -100,7 +100,12 @@ ipcMain.on("maximizeAppOnly", async (event) => {
   mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
 })
 ipcMain.on("logoutSuccess", async (ev, data) => {
-  store.has("authToken") && store.delete("authToken");
+  try {
+    
+    store.has("authToken") && store.delete("authToken");
+  } catch (error) {
+    
+  }
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
   } else {
