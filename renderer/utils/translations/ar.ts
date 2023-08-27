@@ -103,7 +103,7 @@ const ar:ITranslation = {
     deleteStudentSuccess: "تم حذف الطالب بنجاح",
     deleteUserSuccess: "تم حذف المستخدم بنجاح",
     deleteGuardianSuccess: "تم حذف ولي الأمر بنجاح",
-    studentDismissSuccess: "تم تخفيض حالة الطالب بنجاح",
+    studentDismissSuccess: "تم صرف الطالب بنجاح",
     classUpdatedSuccess: "تم تحديث تصنيف الصف بنجاح",
     deleteClassSuccess: "تم حذف الصف بنجاح",
     allDismissed: "تم صرف الجميع بنجاح",
