@@ -19,7 +19,7 @@ let mainWindow: BrowserWindow
   mainWindow = createWindow('main', {
 
     frame: false,
-    resizable: false,
+    resizable: true,
     autoHideMenuBar: true,
     titleBarStyle: "default",
     webPreferences: {
