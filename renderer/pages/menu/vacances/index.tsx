@@ -56,12 +56,12 @@ export default function ScheduleContent() {
         >
 
             <Title
-                title={translations.vacances}
+                title={translations.holidays}
             />
 
             <div className="flex mb-6 flex-col gap-4">
                 <h1 className="font-semibold text-3xl">
-                    {translations.vacances}
+                    {translations.holidays}
                 </h1>
                 <p className="text-xs">
                 -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
@@ -150,7 +150,7 @@ function Vacancies({ saved }: {
                 onClick={newSc}
                 className="text-blue-700 flex items-center text-xs gap-2 p-1 rounded hover:bg-blue-100">
                 <Plus size={"small"} />
-                {translations.newVacancy}
+                {translations.newholiday}
             </button>
         </div>
         <div className="shadow-xl divide-y p-2 rounded-lg">

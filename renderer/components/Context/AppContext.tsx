@@ -810,7 +810,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 }
             })
             if (res.success) {
-                toast.success(translations.vacancesupdatedsuccess)
+                toast.success(translations.holidaysupdatedsuccess)
                 await getVacances()
                 return true
             }

@@ -1,61 +1,57 @@
 import { toast } from "react-hot-toast";
 import { config } from "../../utils/fetch";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { useAppContext } from "./AppContext";
 import { useAppSelector } from "../../redux/hooks";
 import { useSession } from "./SessionConext";
 import { store } from "../../redux/store";
 import { setOnline } from "../../redux/reducers/config";
 export default function OnlineChecker({ children }: { children: ReactNode }) {
-    const {online} = useAppSelector(e=>e.config)
+    const { online } = useAppSelector(e => e.config)
     const timer = useRef<NodeJS.Timer>(null)
     const socket = useRef<WebSocket>(null)
     const isMounted = useRef<boolean>(true)
     const host = useAppSelector(e => e.config.host)
     const { getAuthUser } = useSession()
+
+    function onConnect() {
+        store.dispatch(setOnline(true))
+        getAuthUser();
+    }
+    function onClose() {
+        store.dispatch(setOnline(false))
+        if (isMounted.current)
+            timer.current = setTimeout(() => {
+                connectToWs()
+            }, 2000);
+    }
+
     function connectToWs() {
         socket.current = new WebSocket(config.getremoteAddress().replace("http", "ws"));
-        socket.current.addEventListener('open', (event) => {
-            store.dispatch(setOnline(true))
-            getAuthUser();
-            toast("connected to remote server")
-
-        });
-        socket.current.addEventListener('close', (event) => {
-            store.dispatch(setOnline(false))
-            if (isMounted.current)
-                timer.current = setTimeout(() => {
-                    connectToWs()
-                }, 2000);
-        });
+        socket.current.addEventListener('open', (event) => onConnect());
+        socket.current.addEventListener('close', (event) => onClose());
+        socket.current.addEventListener('error', (event) => onClose());
     }
     function removeWsEvents() {
-        socket.current?.removeEventListener('open', (event) => {
-            store.dispatch(setOnline(true))
-            toast("connected to remote server")
-        });
+        socket.current?.removeEventListener('open', (event) => onConnect());
+        socket.current?.removeEventListener('close', (event) => onClose());
+        socket.current?.removeEventListener('error', (event) => onClose());
 
-        socket.current?.removeEventListener('close', (event) => {
-            store.dispatch(setOnline(false))
-            if (isMounted.current)
-                timer.current = setTimeout(() => {
-                    connectToWs()
-                }, 2000);
-        });
     }
 
 
     useEffect(() => {
         connectToWs()
-
+        window.addEventListener('focus', () => connectToWs());
         return () => {
+            window.removeEventListener('focus', () => connectToWs());
             removeWsEvents()
             isMounted.current = true;
             clearTimeout(timer.current)
         }
     }, [host])
 
-    if(online==null) return null
+    if (online == null) return null
+
 
     return (
         <div

@@ -63,7 +63,7 @@ export default function Sidebar() {
                         }
                     />
                     <Item
-                        label={translation.vacances}
+                        label={translation.holidays}
                         profiles={[Roles.SuperUser, Roles.Administrator]}
                         activeOn="equal"
                         link="/menu/vacances"
