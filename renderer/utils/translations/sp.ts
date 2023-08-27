@@ -110,7 +110,12 @@ const sp = {
     logout: "cerrar sesión",
     schedule: " cronograma",
     ignore: "ignorar",
-    dismiss:"despedir"
+    dismiss: "despedir",
+    manual: "manual",
+    manualDesc: "si tienes una red local complicada, se recomienda ingresar la dirección IP manualmente.",
+    auto: "automático",
+    autoDesc: "si tienes una red local complicada, se recomienda ingresar la dirección IP manualmente.",
+    ipConfigurations: "Configuraciones IP"
 
 };
 export default sp

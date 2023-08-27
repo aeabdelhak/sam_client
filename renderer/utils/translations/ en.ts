@@ -111,6 +111,11 @@ const en = {
     schedule: " schedule",
     ignore: "ignore",
     dismiss: "dismiss",
+    manual: "manual",
+    manualDesc: "if you have a complicated local network, it is recommended to enter the IP address manually.",
+    auto: "auto",
+    autoDesc: "if you have a complicated local network, it is recommended to enter the IP address manually.",
+    ipConfigurations: "Ip configurations"
 
 
 }

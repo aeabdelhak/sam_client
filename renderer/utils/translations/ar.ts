@@ -110,7 +110,13 @@ const ar = {
     schedule:"جدول ",
     vacancesupdatedsuccess:"تم تحديث برنامج العطل بنجاح",
     ignore: "تجاهل",
-    dismiss:"صرف"
+    dismiss: "صرف",
+    manual: "يدوي",
+    manualDesc: "إذا كان لديك شبكة محلية معقدة، فمن المستحسن إدخال عنوان IP يدويًا.",
+    auto: "تلقائي",
+    autoDesc: "إذا كان لديك شبكة محلية معقدة، فمن المستحسن إدخال عنوان IP يدويًا.",
+    ipConfigurations: "اعدادات IP"
+
     
     
 
