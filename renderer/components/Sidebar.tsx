@@ -1,18 +1,40 @@
 import { useRouter } from "next/router"
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useRef } from "react"
 import { TimeCircle, Calendar, Category, Home, Logout, People, ShieldDone } from "react-iconly"
-import {  useAppContext } from "./Context/AppContext"
+import { useAppContext } from "./Context/AppContext"
 import { ipcRenderer } from "electron"
 import { useTranslation } from "../utils/translations/Context"
 import { Roles, useSession } from "./Context/SessionConext"
 
 
 export default function Sidebar() {
-    const translation=useTranslation()
+    const translation = useTranslation()
+    const { attendance: {
+        absence
+    } } = useAppContext()
     async function logout() {
-        localStorage.removeItem("authToken")
         ipcRenderer.send("logoutSuccess")
     }
+    const { user } = useSession()
+
+    const { attendance: { getUnreviewd } } = useAppContext()
+    const timer = useRef<NodeJS.Timer>()
+    function getAbseces() {
+        if (user && [Roles.Administrator, Roles.SuperUser].includes(user.role)) {
+            getUnreviewd()
+        }
+        timer.current = setTimeout(() => {
+            getAbseces()
+        }, 1000 * 60)
+    }
+    useEffect(() => {
+        getAbseces()
+        return () => {
+            clearTimeout(timer.current)
+        }
+    }, [])
+
+
     return (
         <div className="z-50">
 
@@ -55,6 +77,7 @@ export default function Sidebar() {
                         }
                     />
                     <Item
+                        badge={absence.data?.flatMap(e => e.data).length}
                         label={translation.attendances}
                         profiles={[Roles.SuperUser, Roles.Administrator]}
                         activeOn="equal"
@@ -82,7 +105,7 @@ export default function Sidebar() {
     )
 }
 
-function Item({ icon, link, activeOn, profiles, label }: { profiles?: Roles[], label:string, activeOn: "equal" | "startWith", link: string, icon: ReactNode }) {
+function Item({ badge, icon, link, activeOn, profiles, label }: { badge?: number, profiles?: Roles[], label: string, activeOn: "equal" | "startWith", link: string, icon: ReactNode }) {
     const router = useRouter()
     const { user } = useSession();
     if (!profiles || (profiles.includes(user.role)))
@@ -92,9 +115,16 @@ function Item({ icon, link, activeOn, profiles, label }: { profiles?: Roles[], l
                     ipcRenderer.send("zoom", true)
                     router.push(link)
                 }}
-                disabled={activeOn == "equal" ? router.pathname == link : router.pathname.startsWith(link)} className="hover:bg-blue-700/10 capitalize  disabled:text-blue-700 disabled: text-sm flex items-center font-extralight gap-2 rounded-lg p-2 ">
-                {icon}
-                {label}
+                disabled={activeOn == "equal" ? router.pathname == link : router.pathname.startsWith(link)} className="hover:bg-blue-700/10 capitalize  disabled:text-blue-700 text-sm flex justify-between items-center  font-extralight gap-2 rounded-lg p-2 ">
+                <div className="flex items-center gap-2">
+                    {icon}
+                    {label}
+                </div>
+                {badge &&
+                    <p className="h-4 w-4 rounded-full text-white text-xs font-bold shrink-0 bg-blue-600">
+                        {badge > 9 ? "+9" : badge}
+                    </p>
+                }
             </button>
         )
     return null

@@ -116,7 +116,16 @@ const sp = {
     auto: "Automático",
     autoDesc: "La aplicación escaneará tu red y descubrirá automáticamente la dirección IP.",
     ipConfigurations: "Configuraciones de IP",
-    next: "Siguiente"
+    next: "Siguiente",
+    noDataToReview: "No hay datos para revisar",
+    justified: "Justificado",
+    unJustified: "No justificado",
+    yes: "Sí",
+    no: "No",
+    attended: "Asistió",
+    notAttended: "No asistió",
+    absence: "Ausencia",
+    history: "Historial"
 };
 
 export default sp;

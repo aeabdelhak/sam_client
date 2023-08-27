@@ -40,6 +40,9 @@ export default function SessionConext({ children }) {
         }
     }
 
+    useEffect(() => {
+        getAuthUser()
+    }, [router.pathname])
 
 
 

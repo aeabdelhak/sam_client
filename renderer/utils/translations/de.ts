@@ -116,7 +116,16 @@ const de = {
     auto: "Automatisch",
     autoDesc: "Die App wird Ihr Netzwerk durchsuchen und die IP-Adresse automatisch erkennen.",
     ipConfigurations: "IP-Konfigurationen",
-    next: "Weiter"
+    next: "Weiter",
+    noDataToReview: "Keine Daten zur Überprüfung",
+    justified: "Berechtigt",
+    unJustified: "Nicht gerechtfertigt",
+    yes: "Ja",
+    no: "Nein",
+    attended: "Anwesend",
+    notAttended: "Nicht anwesend",
+    absence: "Abwesenheit",
+    history: "Verlauf"
 };
 
 export default de;

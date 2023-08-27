@@ -116,7 +116,16 @@ const fr = {
     auto: "Automatique",
     autoDesc: "L'application analysera votre réseau et découvrira automatiquement l'adresse IP.",
     ipConfigurations: "Configurations IP",
-    next: "Suivant"
+    next: "Suivant",
+    noDataToReview: "Aucune donnée à examiner",
+    justified: "Justifié",
+    unJustified: "Non justifié",
+    yes: "Oui",
+    no: "Non",
+    attended: "Présent",
+    notAttended: "Absent",
+    absence: "Absence",
+    history: "Historique"
 };
 
 export default fr;

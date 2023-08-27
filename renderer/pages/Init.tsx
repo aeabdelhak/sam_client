@@ -1,22 +1,16 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 
-import { LoaderIcon, toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import Layout from '../components/layout';
-import { ipcRenderer } from 'electron';
-import { config } from '../utils/fetch';
-import Button from '../components/Ui/button/Button';
-import AppContext from '../components/Context/AppContext';
-import dynamic from 'next/dynamic';
+
+import AppContext, { useAppContext } from '../components/Context/AppContext';
 import Toast from '../components/Ui/Toast';
 import OnlineChecker from '../components/Context/OnlineChecker';
-import { useAppSelector } from '../redux/hooks';
-import IpSettings from '../components/IpSettings';
-import { initConfig } from '../redux/reducers/config';
-import { store } from '../redux/store';
+
+import { Roles, useSession } from '../components/Context/SessionConext';
 export default function Application({ children }: any) {
-    const router=useRouter()
-    
+    const router = useRouter()
+
 
 
 

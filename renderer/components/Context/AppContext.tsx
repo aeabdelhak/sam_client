@@ -96,6 +96,18 @@ type attendance = {
     appendRequest: (classId: string, studentId: string) => void,
     dismiss: (classId: string, studentId: string) => Promise<boolean>,
     dismissClass: (classId: string) => Promise<boolean>,
+    getUnreviewd: () => Promise<void>,
+    absenceReview: (params:
+        { id: string, justified: boolean }[]
+    ) => Promise<boolean>,
+    absence: {
+        loading: boolean,
+        error: boolean
+        data: {
+            date: string,
+            data: Presence[]
+        }[]
+    }
 }
 
 export interface Class {
@@ -114,6 +126,8 @@ export interface Presence {
     startTime: Date;
     endTime: Date;
     attended: boolean;
+    justified: boolean;
+    reviewed: boolean;
     scheduleId: string;
     studentId: string;
     Student: StudentsEntity
@@ -175,8 +189,7 @@ type state = {
     setremoteServer: Dispatch<SetStateAction<string>>,
 
 }
-
-const Context = createContext<state>({
+const initialState: state = {
     title: "",
     remoteServer: "",
     setremoteServer: () => { },
@@ -239,12 +252,22 @@ const Context = createContext<state>({
         appendRequest: () => { },
         dismiss: async () => false,
         dismissClass: async () => false,
+        getUnreviewd: async () => { },
+        async absenceReview(params) {
+            return true
+        },
+        absence: {
+            data: null as never,
+            error: false,
+            loading: true,
+        }
     }
-})
+}
+const Context = createContext<state>(initialState)
 
 export const useAppContext = () => useContext(Context);
 export default function AppContext({ children }: { children: ReactNode }) {
-    const translations=useTranslation()
+    const translations = useTranslation()
     const [classes, setclasses] = useState<classState>()
     const [dismissReqs, setdismissReqs] = useState<DismissionRequests>(new Map())
     const [users, setusers] = useState<userState>()
@@ -253,7 +276,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
     const [classesData, setclassesData] = useState<Map<string, Class>>(new Map());
     const [vacances, setvacances] = useState<Vacancy[]>()
     const [loadingvacances, setloadingvacances] = useState<boolean>(false)
-    const [user, setUser] = useState<User>()
+    const [absence, setabsence] = useState(initialState.attendance.absence)
     const [title, setTitle] = useState("")
     const [remoteServer, setremoteServer] = useState("")
 
@@ -322,7 +345,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
             return false;
         }
     }
- 
+
     async function newClass(params: { label: string }) {
         type response = {
             exist: boolean,
@@ -663,6 +686,19 @@ export default function AppContext({ children }: { children: ReactNode }) {
         }
     }
 
+    async function getUnreviewd() {
+        setabsence(e => ({ ...e, loading: true, error: false }))
+        try {
+            const getData = await fetchApi('/get/presence/unreviewed')
+            if (getData)
+                setabsence(e => ({ ...e, data: getData }))
+        } catch (error) {
+            setabsence(e => ({ ...e, error: true }))
+
+        }
+        setabsence(e => ({ ...e, loading: false }))
+
+    }
     async function getClass(id: string) {
         try {
             const data = new Map(classesData)
@@ -676,7 +712,7 @@ export default function AppContext({ children }: { children: ReactNode }) {
     async function dismissClass(id: string) {
         try {
             const res = await fetchApi('/attendance/dismissall/' + id, {
-                method:"POST",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -800,6 +836,29 @@ export default function AppContext({ children }: { children: ReactNode }) {
 
 
     }
+    const absenceReview: state["attendance"]["absenceReview"] = async (params) => {
+        try {
+            const res = await fetchApi("/set/presence/justified", {
+                method: "POST",
+                body: JSON.stringify(params),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            if (res==true) {
+                toast.success("")
+                await getUnreviewd()
+                return true
+            }
+            else toast.error(translations.errorMsg)
+        }
+        catch {
+
+        }
+        return false
+
+
+    }
     async function upsertVacances(params: upsertVacanceType[]) {
         try {
             const res = await fetchApi("/upsert/vacances", {
@@ -903,7 +962,10 @@ export default function AppContext({ children }: { children: ReactNode }) {
                 appendRequest,
                 dismiss,
                 rejectRequest,
-                dismissClass
+                dismissClass,
+                getUnreviewd,
+                absence,
+                absenceReview
             },
             users: {
                 ...users,

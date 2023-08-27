@@ -118,9 +118,16 @@ const ar:ITranslation = {
     auto: "تلقائي",
     autoDesc: "ستقوم التطبيق بفحص شبكتك واكتشاف عنوان IP تلقائيًا.",
     ipConfigurations: "اعدادات IP",
-    next: "التالي"
-
-    
+    next: "التالي",
+    noDataToReview: "لا توجد بيانات للمراجعة",
+    justified: "مبرر",
+    unJustified: "غير مبرر",
+    yes: "نعم",
+    no: "لا",
+    attended: "حضر",
+    notAttended: "لم يحضر",
+    absence: "الغياب",
+    history: "السجل",
     
 
 
