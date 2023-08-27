@@ -32,6 +32,7 @@ export default function OnlineChecker({ children }: { children: ReactNode }) {
         socket.current.addEventListener('error', (event) => onClose());
     }
     function removeWsEvents() {
+        socket.current?.close()
         socket.current?.removeEventListener('open', (event) => onConnect());
         socket.current?.removeEventListener('close', (event) => onClose());
         socket.current?.removeEventListener('error', (event) => onClose());
