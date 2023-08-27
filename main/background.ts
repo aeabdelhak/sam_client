@@ -4,9 +4,10 @@ import { createWindow } from './helpers';
 import find from 'local-devices'
 import { exec } from "child_process"
 import path from 'path';
+import Store from "electron-store"
 const isProd: boolean = process.env.NODE_ENV === 'production';
 const isMacOS = process.platform === 'darwin';
-
+const store = new Store()
 if (isProd) {
   serve({ directory: 'app' });
 } else {
@@ -17,10 +18,9 @@ let mainWindow: BrowserWindow
   await app.whenReady();
   const icon = path.join(__dirname, "../images/icon.icns")
   mainWindow = createWindow('main', {
-    width: 400,
-    height: 450,
+
     frame: false,
-    icon:icon,
+    icon: icon,
     resizable: false,
     autoHideMenuBar: true,
     titleBarStyle: "default",
@@ -28,18 +28,32 @@ let mainWindow: BrowserWindow
       scrollBounce: true,
     }
   });
-
+  const authToken = store.get("authToken");
 
   if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
+    if (!authToken) {
+      mainWindow.setSize(400, 450, true)
+      await mainWindow.loadURL('app://./home.html');
+    }
+    else {
+      await mainWindow.loadURL('app://./menu.html');
+    }
+
   } else {
     const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/home`);
+    if (!authToken) {
+      mainWindow.setSize(400, 450, true)
+      await mainWindow.loadURL(`http://localhost:${port}/home`);
+    }
+    else {
+      await mainWindow.loadURL(`http://localhost:${port}/menu`);
+    }
 
   }
 })();
 
-ipcMain.on("loginSuccess", () => {
+ipcMain.on("loginSuccess", (ev, data) => {
+  store.set("authToken", data);
   mainWindow.webContents.clearHistory();
   mainWindow.resizable = true;
   mainWindow.setSize(1200, 600, true)
@@ -65,7 +79,8 @@ ipcMain.on("maximizeApp", async (event) => {
 ipcMain.on("maximizeAppOnly", async (event) => {
   mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
 })
-ipcMain.on("logoutSuccess", async () => {
+ipcMain.on("logoutSuccess", async (ev, data) => {
+  store.has("authToken") && store.delete("authToken");
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
   } else {
@@ -75,6 +90,12 @@ ipcMain.on("logoutSuccess", async () => {
 
 }
 )
+
+ipcMain.on("getToken", (ev) => {
+  ev.returnValue = store.get("authToken")
+})
+
+
 ipcMain.on("init", async () => {
 
   mainWindow.webContents.clearHistory();
@@ -121,9 +142,7 @@ async function getConnectedIPAddresses() {
   return await getConnectedDevices();
 }
 
-async function resize({ width, height }: { width, height }) {
 
-}
 
 function getConnectedDevices() {
   return new Promise((resolve, reject) => {

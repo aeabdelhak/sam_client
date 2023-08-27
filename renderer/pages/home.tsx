@@ -10,24 +10,26 @@ function Home() {
   const [loading, setloading] = useState(true)
   useEffect(() => {
     setloading(true)
-    if (typeof window !="undefined")
-   (async () => {
-      if (localStorage.getItem("authToken"))
-   {    await router.replace("/menu") 
-       ipcRenderer.send("loginSuccess");}
+    if (typeof window != "undefined")
+      (async () => {
+        const token = await ipcRenderer.sendSync("getToken")
+        if (token) {
+          await router.replace("/menu")
+          ipcRenderer.send("loginSuccess");
+        }
 
-    })()
+      })()
     setloading(false)
-    
+
     return () => {
-      
+
     };
   }, [])
   if (loading) return null
 
   return (
     <React.Fragment>
-      <Login/>
+      <Login />
     </React.Fragment>
   );
 }

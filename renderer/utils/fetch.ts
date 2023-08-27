@@ -4,6 +4,7 @@ import { Image } from "../types/class"
 import { translation } from "./translations/Context"
 import { store } from "../redux/store"
 import { setRemote } from "../redux/reducers/config"
+import { ipcRenderer } from "electron"
 
 type props = Parameters<typeof fetch>
 export class config {
@@ -27,7 +28,7 @@ export class config {
 }
 
 export default async function fetchApi(...props: props) {
-    const token = localStorage.getItem("authToken")
+    const token = await ipcRenderer.sendSync("getToken")
     const url = config.getremoteAddress()
     try {
 

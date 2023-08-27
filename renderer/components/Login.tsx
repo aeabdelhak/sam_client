@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { LoaderIcon, toast } from "react-hot-toast";
 import { ipcRenderer } from "electron";
 import { config } from "../utils/fetch";
-import { useAppContext } from "./Context/AppContext";
 import Title from "./Title";
 import { useSession } from "./Context/SessionConext";
 import { useTranslation } from "../utils/translations/Context";
@@ -32,9 +31,8 @@ export default function Login() {
         })
         const data = await res.json()
         if (data.success) {
-            localStorage.setItem("authToken", data.token)
+            ipcRenderer.send("loginSuccess",data.token)
             router.replace("/menu")
-            ipcRenderer.send("loginSuccess")
         }
         else toast.error(translations.wrongCredentials)
     }
