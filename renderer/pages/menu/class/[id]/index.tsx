@@ -176,7 +176,7 @@ export  function Class({id,label}:{id:string,label:string}) {
                     </div>}
 
             </div>
-            <div className="py-4 flex   gap-4">
+            <div className="py-4 flex   flex-wrap gap-4">
                 {theClass?.Students?.map(student => (
                     <Student
                         requested={dissRequests?.has(student.id)}
