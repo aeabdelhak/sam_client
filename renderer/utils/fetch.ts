@@ -40,8 +40,7 @@ export default async function fetchApi(...props: props) {
             }
         })
         if (res.status == 401) {
-            localStorage.clear()
-            toast.error(translation.getCurrent().sessionTimeOut)
+            await ipcRenderer.sendSync("logoutSuccess")
             return Router.replace("/home")
         }
         else if (res.status == 200)
