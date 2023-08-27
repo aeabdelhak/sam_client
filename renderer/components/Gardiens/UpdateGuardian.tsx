@@ -47,8 +47,8 @@ export default function UpdateGuardian(guardian: guardian) {
                 </p>
             </div>
             <div className="flex flex-col gap-2">
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.guardianName}
                     </p>
                     <Input
@@ -60,8 +60,8 @@ export default function UpdateGuardian(guardian: guardian) {
                         placeholder={translations.guardianName}
                     />
                 </label>
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                     {translations.guardianCardId}
 
                     </p>
@@ -73,8 +73,8 @@ export default function UpdateGuardian(guardian: guardian) {
                         placeholder={translations.guardianCardId}
                     />
                 </label>
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                     {translations.phoneNumber}
                     </p>
                     <Input

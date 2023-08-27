@@ -115,7 +115,8 @@ const de = {
     manualDesc: "Wenn Sie ein kompliziertes lokales Netzwerk haben, wird empfohlen, die IP-Adresse manuell einzugeben.",
     auto: "automatisch",
     autoDesc: "Wenn Sie ein kompliziertes lokales Netzwerk haben, wird empfohlen, die IP-Adresse manuell einzugeben.",
-    ipConfigurations: "IP-Konfigurationen"
+    ipConfigurations: "IP-Konfigurationen",
+    next:"nächste"
 
 
 };

@@ -23,7 +23,7 @@ export default function ScheduleContent() {
     } = useAppContext()
     if (!loading && !data) getVacances();
 
-   
+
 
     const save: FormEventHandler<HTMLFormElement> = async ev => {
         ev.preventDefault()
@@ -39,14 +39,14 @@ export default function ScheduleContent() {
             endDate: new Date(endTimes.at(i).toString()),
             label: labels.at(i).toString(),
         }))
-        
+
         const res = await upsertVacances(data);
         res && rerender(e => e + 1)
         start(false)
 
     }
 
-const translations=useTranslation()
+    const translations = useTranslation()
     return (
 
         <form
@@ -57,6 +57,17 @@ const translations=useTranslation()
             <Title
                 title={translations.vacances}
             />
+
+            <div className="flex mb-6 flex-col gap-4">
+                <h1 className="font-semibold text-3xl">
+                    {translations.vacances}
+                </h1>
+                <p className="text-xs">
+                -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+                </p>
+            </div>
+
+
             {upserting
                 &&
                 <div className="fixed inset-0 flex justify-center items-center bg-white/20">
@@ -70,23 +81,23 @@ const translations=useTranslation()
             <div className="space-y-4 ">
                 {loading && !data ?
                     <PlaceHolder
-                            
+
                     />
-                    
+
 
                     :
                     <Vacancies
                         saved={data}
-              
+
                     />}
-                    
+
             </div>
             <SaveBtn />
         </form>
     )
 }
 function SaveBtn() {
-    const translations=useTranslation()
+    const translations = useTranslation()
     const [enabled, setenabled] = useState(false)
     useEffect(() => {
         document.addEventListener("touched", () => setenabled(true))
@@ -111,7 +122,7 @@ function Vacancies({ saved }: {
 }) {
     const [savedVacancies, setsavedVacancies] = useState(saved)
     const [schedule, setschedule] = useState<Set<string>>(new Set())
-const translations=useTranslation()
+    const translations = useTranslation()
     function newSc() {
         setschedule(e => {
             const d = new Set(e)
@@ -120,7 +131,7 @@ const translations=useTranslation()
         })
     }
 
-    function formatDate(thedate:any) {
+    function formatDate(thedate: any) {
         const date = new Date(thedate)
         return date.getFullYear().toString().concat(
             "-",
@@ -165,7 +176,7 @@ const translations=useTranslation()
                         </label>
                         <label className=" flex gap-2 items-center">
                             <b className="text-xs text-gray-500 font-medium ">
-                            {translations.name}
+                                {translations.name}
                             </b>
                             <input
                                 onChange={() => document.dispatchEvent(new Event("touched"))}
@@ -194,7 +205,7 @@ const translations=useTranslation()
                     <label className=" flex gap-2 items-center">
 
                         <b className="text-xs text-gray-500 font-medium ">
-                        {translations.startsAt}
+                            {translations.startsAt}
                         </b>
                         <input
                             onChange={() => document.dispatchEvent(new Event("touched"))}
@@ -202,7 +213,7 @@ const translations=useTranslation()
                     </label>
                     <label className=" flex gap-2 items-center">
                         <b className="text-xs text-gray-500 font-medium ">
-                        {translations.endsAt}
+                            {translations.endsAt}
                         </b>
                         <input
                             onChange={() => document.dispatchEvent(new Event("touched"))}
@@ -211,7 +222,7 @@ const translations=useTranslation()
                     </label>
                     <label className=" flex gap-2 items-center">
                         <b className="text-xs text-gray-500 font-medium ">
-                        {translations.name}
+                            {translations.name}
                         </b>
                         <input required className="bg-transparent px-4 py-1 border rounded-md" type="text" name="label[]" id="" />
                     </label>

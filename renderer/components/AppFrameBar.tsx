@@ -75,12 +75,12 @@ export default function AppFrameBar() {
                     className="   w-6 h-6 text-xs cursor-pointer   flex justify-center items-center">
                     {!muted ? <VolumeUp size={"small"} /> : <VolumeOff size={"small"} />}
                 </button>
-                {user && <div className=" grid  bg-gray-200 px-2 rounded-lg  ">
-                    <div className="flex w-full gap-2 items-center">
-                        <div className=" uppercase bg-blue-200  text-blue-800 w-4 h-4 text-[6pt]  rounded-full flex justify-center items-center">
+                {user && <div className=" grid  bg-blue-100  rounded-lg  ">
+                    <div className="flex bgbl justify-center w-full  items-center">
+                        <div className=" uppercase bg-blue-200  text-blue-800 w-4 h-4 text-[10pt]  rounded-full flex justify-center items-center">
                             {user?.name?.charAt(0)}
                         </div>
-                        <div className=" flex-1 grid">
+                        <div className="px-2 flex-1 grid">
                             <p className=" text-xs line-clamp-2 w-full ">
                                 {user?.name}
                             </p>
@@ -89,7 +89,7 @@ export default function AppFrameBar() {
                     </div>
 
                 </div>}
-                <div className="  text-center w-16 ">
+                <div className="  flex justify-center items-center  text-center w-16 ">
                     <p className="  ">
                         {curreTime?.toLocaleTimeString("fr", {
                             hour: "numeric",

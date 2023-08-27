@@ -82,7 +82,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                         start(() => save(e))
                     }}
                     className="flex  z-10 flex-col gap-2 p-4">
-                    <label>
+                    <label className="space-y-1">
                         <p className="text-sm ">
                             {translations.firstName}
                         </p>
@@ -95,7 +95,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                             placeholder={translations.firstName}
                         />
                     </label>
-                    <label>
+                    <label className="space-y-1">
                         <p className="text-sm ">
                         {translations.lastName}
 
@@ -108,7 +108,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
                             placeholder=                            {translations.lastName}
                         />
                     </label>
-                    <label>
+                    <label className="space-y-1">
                         <p className="text-sm ">
                         {translations.image}
 
@@ -122,7 +122,7 @@ export default function EditAStudent({ student }: { student: StudentsEntity }) {
 
                         />
                     </label>
-                    <label>
+                    <label className="space-y-1">
                         <p className="text-sm ">
                             {translations.class}
                         </p>

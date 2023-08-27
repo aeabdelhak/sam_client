@@ -18,7 +18,7 @@ const weekdays = [
 ]
 
 export default function Index() {
-    const translations=useTranslation()
+    const translations = useTranslation()
     const [selectedClass, setSelectedClass] = useState<string>()
     const [isgetting, start] = useState(false)
     const [history, sethistory] = useState<PresenceHistory>()
@@ -79,12 +79,12 @@ export default function Index() {
             <form
                 onSubmit={get}
                 className="flex gap-2">
-                <div className="px-2 bg-slate-100  grow flex">
+                <div className="px-2 border rounded-lg  grow flex">
                     <select
                         disabled={isgetting}
                         value={selectedClass}
                         onChange={e => setSelectedClass(e.target.value ?? undefined)}
-                        className="  text-sm  py-1  w-full bg-transparent " name="classId" id="">
+                        className="  text-xs  py-1  w-full bg-transparent " name="classId" id="">
                         {
                             data?.map(e => (
                                 <option value={e.id} key={e.id} className="">
@@ -96,10 +96,10 @@ export default function Index() {
                         }
                     </select>
                 </div>
-                <div className="px-2 bg-slate-100  grow flex">
+                <div className="px-2 border rounded-lg  grow flex">
                     <select
                         disabled={isgetting}
-                        className="  text-sm  py-1  w-full bg-transparent " name="studentId" id="">
+                        className="  text-xs  py-1  w-full bg-transparent " name="studentId" id="">
                         {
                             students?.map(e => (
                                 <option value={e.id} key={e.id} className="">
@@ -113,6 +113,7 @@ export default function Index() {
                 </div>
                 <div className="   grow" >
                     <Input
+                        bodered
                         disabled={isgetting}
                         name="from"
                         defaultValue={formatDate()}
@@ -122,6 +123,7 @@ export default function Index() {
                 </div>
                 <div className="   grow" >
                     <Input
+                        bodered
                         disabled={isgetting}
                         name="to"
                         defaultValue={formatDate()}
@@ -149,22 +151,22 @@ export default function Index() {
 
 
             <hr className="my-4" />
-           {isgetting && <div className="">
+            {isgetting && <div className="">
                 <div className=" z-0 p-1 bg-gradient-to-br  flex items-center rounded-lg gap-4">
                     <div
-                    
+
                         className="   flex aspect-square bg-slate-200 animate-pulse w-28 h-w-28  overflow-hidden shrink-0  text-white rounded   justify-center items-center">
                     </div>
                     <div className="flex flex-1 items-start grow text-blue-900 space-y-1 flex-col">
                         <span
-                          style={{
-                            animationDelay:.2+"s"
-                        }}
+                            style={{
+                                animationDelay: .2 + "s"
+                            }}
                             className="p-3 rounded-lg w-full max-w-xs bg-slate-200 " />
                         <span
-                          style={{
-                            animationDelay:.4+"s"
-                        }}
+                            style={{
+                                animationDelay: .4 + "s"
+                            }}
                             className="p-2 rounded-lg px-10 bg-slate-200 " />
 
                     </div>
@@ -172,8 +174,8 @@ export default function Index() {
                 {Array.from(Array(1).keys()).map((i) => (
                     <div
                         style={{
-                        animationDelay:i*.3+"s"
-                    }}
+                            animationDelay: i * .3 + "s"
+                        }}
                         key={i} className="p-4 my-2 animate-pulse bg-slate-100 rounded-lg h-52 ">
 
                     </div>
@@ -199,12 +201,12 @@ export default function Index() {
             }
 
             {
-              !isgetting &&  history?.presence?.map(e => (
+                !isgetting && history?.presence?.map(e => (
                     <div key={e.date?.toString()} className="p-4 my-1 bg-slate-100 rounded-lg ">
                         <h1 className="font-bold uppercase text-blue-800">
                             {translations[weekdays[new Date(e.date).getDay()]]} {new Date(e.date).toLocaleDateString('fr')}
                         </h1>
-                       {e.data.length > 0 ? <div className="bg-white p-2 rounded-lg mt-2">
+                        {e.data.length > 0 ? <div className="bg-white p-2 rounded-lg mt-2">
 
                             {e.data.map(e => (
                                 <div
@@ -239,10 +241,10 @@ export default function Index() {
                                     </div>
                                 </div>
                             ))}
-                      </div> : 
-                          <p className="text-xs text-gray-700">
-                              {translations.noData} 
-                        </p>
+                        </div> :
+                            <p className="text-xs text-gray-700">
+                                {translations.noData}
+                            </p>
                         }
 
                     </div>

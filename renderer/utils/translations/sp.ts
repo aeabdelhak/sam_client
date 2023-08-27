@@ -115,7 +115,8 @@ const sp = {
     manualDesc: "si tienes una red local complicada, se recomienda ingresar la dirección IP manualmente.",
     auto: "automático",
     autoDesc: "si tienes una red local complicada, se recomienda ingresar la dirección IP manualmente.",
-    ipConfigurations: "Configuraciones IP"
+    ipConfigurations: "Configuraciones IP",
+    next:"próximo"
 
 };
 export default sp

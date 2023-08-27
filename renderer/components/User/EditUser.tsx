@@ -95,8 +95,8 @@ export default function EditUser(data: User) {
                                 onSubmit={ save}
                                 className="flex  z-10 flex-col gap-2 ">
                                 <div className="flex flex-col gap-2">
-                                    <label>
-                                        <p className="text-sm font-bold">
+                                    <label className="space-y-1">
+                                        <p className="text-xs font-normal">
                                             {translations.name}
                                         </p>
                                         <Input
@@ -107,8 +107,8 @@ export default function EditUser(data: User) {
                                             placeholder={translations.name}
                                         />
                                     </label>
-                                    <label>
-                                        <p className="text-sm font-bold">
+                                    <label className="space-y-1">
+                                        <p className="text-xs font-normal">
                                             {translations.username}
                                         </p>
                                         <Input
@@ -121,8 +121,8 @@ export default function EditUser(data: User) {
                                     </label>
                                     {
                                         user.role == Roles.SuperUser &&
-                                        <label>
-                                            <p className="text-sm font-bold">
+                                        <label className="space-y-1">
+                                            <p className="text-xs font-normal">
                                                 {translations.role}
                                             </p>
                                             <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">
@@ -165,8 +165,8 @@ export default function EditUser(data: User) {
                             >
 
 
-                                <label>
-                                    <p className="text-sm font-bold">
+                                <label className="space-y-1">
+                                    <p className="text-xs font-normal">
                                         {translations.password}
                                     </p>
                                     <Input

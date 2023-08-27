@@ -115,7 +115,8 @@ const fr = {
     manualDesc: "si vous avez un réseau local compliqué, il est recommandé d'entrer l'adresse IP manuellement.",
     auto: "automatique",
     autoDesc: "si vous avez un réseau local compliqué, il est recommandé d'entrer l'adresse IP manuellement.",
-    ipConfigurations: "Configurations IP"
+    ipConfigurations: "Configurations IP",
+    next:"suivant"
 
 
 };

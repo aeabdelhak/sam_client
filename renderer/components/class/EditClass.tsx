@@ -68,8 +68,8 @@ export default function EditClass(data: Class) {
                     >
 
 
-                        <label>
-                            <p className="text-sm font-bold">
+                        <label className="space-y-1">
+                            <p className="text-xs font-normal">
                                 {translations.name}
                             </p>
                             <Input

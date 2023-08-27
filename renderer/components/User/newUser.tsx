@@ -49,9 +49,9 @@ export default function NewUser() {
                     {translations.newUserDsc}
                 </p>
             </div>
-            <div className="flex flex-col gap-2">
-                <label>
-                    <p className="text-sm font-bold">
+            <div className="flex flex-col gap-4">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.name}
                     </p>
                     <Input
@@ -60,8 +60,8 @@ export default function NewUser() {
                         placeholder={translations.password}
                     />
                 </label>
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.username}
                     </p>
                     <Input
@@ -70,8 +70,8 @@ export default function NewUser() {
                         placeholder={translations.username}
                     />
                 </label>
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.password}
                     </p>
                     <Input
@@ -83,8 +83,8 @@ export default function NewUser() {
                 </label>
                 {
                     user.role == Roles.SuperUser &&
-                    <label>
-                        <p className="text-sm font-bold">
+                    <label className="space-y-1">
+                        <p className="text-xs font-normal">
                             {translations.role}
                         </p>
                         <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">

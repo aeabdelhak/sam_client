@@ -7,12 +7,12 @@ import { LoaderIcon, toast } from "react-hot-toast";
 import { ChevronLeft } from "react-iconly";
 import { config } from "../utils/fetch";
 import { ipcRenderer } from "electron";
+import { useTranslation } from "../utils/translations/Context";
 
 export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
     const [auto, setauto] = useState(true)
     const [step, setstep] = useState(0)
-
-
+    const translations=useTranslation()
 
     return (
         <Modal shown={open} handler={setOpen}>
@@ -20,7 +20,7 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
                 <div className="space-y-2">
                     <div className="flex justify-between">
                         <h1 className="font-semibold text-xl">
-                            Ip Configurations
+                            {translations.ipConfigurations}
                         </h1>
                         <ModalCloser />
                     </div>
@@ -40,10 +40,10 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
                                 <div className=" peer-checked:bg-blue-600 p-[6px] border-2 rounded-full">
 
                                 </div>
-                                auto
+                                {translations.auto}
                             </div>
                             <p className="text-sm font-extralight px-5">
-                                the app will scan your network and discover the ip address automatically
+                               {translations.autoDesc}
                             </p>
                         </div>
                     </div>
@@ -58,10 +58,10 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
                                 <div className=" peer-checked:bg-blue-600 p-[6px] border-2 rounded-full">
 
                                 </div>
-                                manual
+                                {translations.manual}
                             </div>
                             <p className="text-sm font-extralight px-5">
-                                if you have a complicated local network , it recomended to enter the ip address manually
+                                {translations.manualDesc}
                             </p>
                         </div>
                     </div>
@@ -72,7 +72,7 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
                         <Button
                             onClick={() => setstep(1)}
                         >
-                            next
+                            {translations.next}
                         </Button>
                     </div>
                 </div>}
@@ -86,7 +86,7 @@ export default function IpSettings({ open, setOpen }: { open: boolean, setOpen: 
 function Manual({ setstep }: { setstep: any }) {
     const [loading, setloading] = useState(false)
     const { close } = useModal()
-
+    const translations=useTranslation()
     return <form
         onSubmit={async e => {
             e.preventDefault()
@@ -115,10 +115,10 @@ function Manual({ setstep }: { setstep: any }) {
                 <ChevronLeft />
             </button>
             <div className="flex gap-2 items-center">
-                manual
+                {translations.manual}
             </div>
             <p className="text-sm font-extralight ">
-                if you have a complicated local network , it recomended to enter the ip address manually
+                {translations.manualDesc}
             </p>
         </div>
         <Input
@@ -133,7 +133,7 @@ function Manual({ setstep }: { setstep: any }) {
                 disabled={loading}
 
                 type="submit">
-                save
+                {translations.save}
             </Button>
 
         </div>
@@ -143,6 +143,7 @@ function Manual({ setstep }: { setstep: any }) {
 function AutoLockup() {
     const [loading, setloading] = useState(true)
     const { close } = useModal()
+    const translations=useTranslation()
     async function lockUp() {
         const ips = await ipcRenderer.sendSync("remoteLockUp") as string[]
         await Promise.all(ips.map(async ip => {
@@ -174,10 +175,10 @@ function AutoLockup() {
     return <form className="p-6 space-y-5">
         <div className="flex   flex-col items-start">
             <div className="flex gap-2 items-center">
-                auto
+                {translations.auto}
             </div>
             <p className="text-sm font-extralight ">
-                if you have a complicated local network , it's recomended to enter the ip/host address manually
+                {translations.autoDesc}
             </p>
         </div>
         <div className="flex justify-center items-center scale-[4]">

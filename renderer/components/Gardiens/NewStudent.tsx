@@ -41,8 +41,8 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                 </p>
             </div>
             <div className="flex flex-col gap-2">
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.firstName}
                     </p>
                     <Input
@@ -52,8 +52,8 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                         placeholder={translations.firstName}
                     />
                 </label>
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.lastName}
                     </p>
                     <Input
@@ -63,8 +63,8 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                         placeholder={translations.lastName}
                     />
                 </label>
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.image}
                     </p>
                     <Input
@@ -76,8 +76,8 @@ export default function NewStudent({ guardianId }: { guardianId: string }) {
                         placeholder={translations.image}
                     />
                 </label>
-                <label>
-                    <p className="text-sm font-bold">
+                <label className="space-y-1">
+                    <p className="text-xs font-normal">
                         {translations.class}
                     </p>
                     <div className="rounded-sm flex focus-within:ring-2 items-center  bg-slate-100 ">

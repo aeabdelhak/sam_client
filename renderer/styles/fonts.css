@@ -1,45 +1,105 @@
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-Bold.ttf");
+    src: url("/fonts/Exo/Exo2-Bold.ttf");
     font-weight: 700;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-ExtraBold.ttf");
+    src: url("/fonts/Exo/Exo2-ExtraBold.ttf");
     font-weight: bold ,800;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-Black.ttf");
+    src: url("/fonts/Exo/Exo2-Black.ttf");
     font-weight: bolder ,900;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-SemiBold.ttf");
+    src: url("/fonts/Exo/Exo2-SemiBold.ttf");
     font-weight: 600;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-Regular.ttf");
+    src: url("/fonts/Exo/Exo2-Regular.ttf");
     font-weight: 500;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-Medium.ttf");
+    src: url("/fonts/Exo/Exo2-Medium.ttf");
     font-weight: 400;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-Light.ttf");
+    src: url("/fonts/Exo/Exo2-Light.ttf");
     font-weight: 300;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-ExtraLight.ttf");
+    src: url("/fonts/Exo/Exo2-ExtraLight.ttf");
     font-weight: 200;
 }
 @font-face {
     font-family: "exo";
-    src: url("/fonts/Exo2-Thin.ttf");
+    src: url("/fonts/Exo/Exo2-Thin.ttf");
     font-weight: 100;
+}
+
+
+
+
+
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-Bold.ttf");
+    font-weight: 700;
+    unicode-range: U+0600 - U+06FF;
+
+}
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-ExtraBold.ttf");
+    font-weight: bold ,800;
+    unicode-range: U+0600 - U+06FF;
+
+}
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-Black.ttf");
+    font-weight: bolder ,900;
+    unicode-range: U+0600 - U+06FF;
+
+}
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-Bold.ttf");
+    font-weight: 600;
+    unicode-range: U+0600 - U+06FF;
+
+}
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-Regular.ttf");
+    font-weight: 500;
+    unicode-range: U+0600 - U+06FF;
+
+}
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-Medium.ttf");
+    font-weight: 400;
+    unicode-range: U+0600 - U+06FF;
+
+}
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-Light.ttf");
+    font-weight: 300;
+    unicode-range: U+0600 - U+06FF;
+
+}
+@font-face {
+    font-family: "tajawal";
+    src: url("/fonts/Tajawal/Tajawal-ExtraLight.ttf");
+    unicode-range: U+0600 - U+06FF;
+    font-weight: 200;
 }
