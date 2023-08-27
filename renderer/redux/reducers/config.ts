@@ -11,7 +11,7 @@ const initialState: configType = {
     host: host ? `http://${host}:4000` : null,
     nudedHost: host ?? null,
     init: false,
-    online: false,
+    online: null as never,
 };
 
 const configSlice = createSlice({

@@ -55,6 +55,8 @@ export default function OnlineChecker({ children }: { children: ReactNode }) {
         }
     }, [host])
 
+    if(online==null) return null
+
     return (
         <div
             key={host}
