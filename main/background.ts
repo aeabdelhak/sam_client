@@ -16,11 +16,9 @@ if (isProd) {
 let mainWindow: BrowserWindow
 (async () => {
   await app.whenReady();
-  const icon = path.join(__dirname, "../images/icon.icns")
   mainWindow = createWindow('main', {
 
     frame: false,
-    icon: icon,
     resizable: false,
     autoHideMenuBar: true,
     titleBarStyle: "default",
