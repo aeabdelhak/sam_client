@@ -30,7 +30,7 @@ export default function AppFrameBar() {
 
     return (
         <div className=" z-[40] text-xs inset-x-0 fixed   top-0 justify-between items-center bg-white border-b flex ">
-            <div className="ltr:ml-40 rtl:mr-40 flex items-center flex-1">
+            <div className={"flex items-center flex-1 ".concat(title && title.trim()!="" ? " ltr:ml-40 rtl:mr-40 " :"")}>
 
                 <NavArrows />
                 <div
